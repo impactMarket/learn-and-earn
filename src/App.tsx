@@ -23,11 +23,14 @@ import Lesson from './components/Lesson/Lesson';
 import {
 	WagmiConfig,
 	useAccount,
+	useConnect,
 	useNetwork,
 	useWalletClient
 } from "wagmi";
 import { ImpactProvider } from "@impact-market/utils/ImpactProvider";
-import { wagmiConfig } from './helpers/network';
+import { chains, wagmiConfig } from './helpers/network';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { useEffect, useState } from 'react';
 
 
 const Test = () => {
@@ -37,20 +40,46 @@ const Test = () => {
 };
 
 function Wrapper() {
-	const { address } = useAccount();
+    const [token, setToken] = useState('');
+	const { address, isConnected } = useAccount();
 	const { data: signer } = useWalletClient();
 	const { chain } = useNetwork();
+	const { connect } = useConnect({
+		connector: new InjectedConnector({ chains }),
+	});
+
+    useEffect(() => {
+        console.log({ isConnected })
+        connect();
+    }, []);
+    useEffect(() => {
+        console.log({ address })
+		if (address) {
+			const requestOptions = {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ address }),
+                'client-id': 2,
+			};
+			fetch(
+				import.meta.env.VITE_API_URL + "/users",
+				requestOptions
+			)
+				.then((response) => response.json())
+				.then((data) => setToken(data.data.token));
+		}
+	}, [address]);
 
 	return (
-		<ImpactProvider
-			jsonRpc={chain?.rpcUrls.public.http[0] || 'https://forno.celo.org'}
-			signer={signer ?? null}
-			address={address ?? null}
-			networkId={chain?.id || 42220}
-		>
+		// <ImpactProvider
+		// 	jsonRpc={import.meta.env.VITE_JSON_RPC}
+		// 	signer={signer ?? null}
+		// 	address={address ?? null}
+		// 	networkId={chain?.id || 42220}
+		// >
 			<BrowserRouter>
                 <Header />
-                <DataProvider >
+                <DataProvider token={token}>
                         <Routes>
                             <Route path="/" element={<Home />} />
                             {/* <Route path="/dashboard" element={<Dashboard />} />
@@ -60,7 +89,7 @@ function Wrapper() {
                         </Routes>
                 </DataProvider>
             </BrowserRouter>
-		</ImpactProvider>
+		// </ImpactProvider>
 	);
 }
 
