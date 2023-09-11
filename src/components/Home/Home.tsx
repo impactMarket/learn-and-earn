@@ -121,7 +121,7 @@ function Home() {
         if (token) {
             const fetcher = (url: string) =>
                 fetch(import.meta.env.VITE_API_URL + url, {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`, 'client-id': 2 } as any
                 }).then((res) => res.json());
             const { data: laeData } = useSWR(`/learn-and-earn`, fetcher);
 
