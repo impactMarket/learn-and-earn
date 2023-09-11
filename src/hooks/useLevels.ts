@@ -8,10 +8,10 @@ import useSWR from 'swr';
 export default function useLevels(levels: any, token?: string) {
     const fetcher = (url: string) =>
         fetch(import.meta.env.VITE_API_URL + url, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}`, 'client-id': 2 } as any
         }).then((res) => res.json());
 
-    const { data: apiData, error } = useSWR(`/learn-and-earn/levels`, fetcher);
+    const { data: apiData, error } = useSWR(`/learn-and-earn/levels?language=en`, fetcher);
     // const auth = useSelector(selectCurrentUser);
     // const [testData, setTestData] = useState({});
 

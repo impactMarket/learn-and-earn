@@ -5,20 +5,31 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "3.8.3",
+    "@ethersproject/abi": "5.7.0",
+    "@ethersproject/contracts": "5.7.0",
+    "@ethersproject/providers": "5.7.2",
     "@impact-market/ui": "^1.6.2",
+    "@impact-market/utils": "4.0.6-beta.1",
     "@prismicio/react": "^2.7.2",
+    "axios": "0.27.2",
+    "bignumber.js": "9.1.2",
+    "ethers": "5.7.2",
+    "graphql": "16.8.0",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.1",
     "react-paginate": "^8.2.0",
     "react-router-dom": "^6.15.0",
-    "styled-components": "^6.0.7"
+    "styled-components": "^6.0.7",
+    "viem": "1.10.9",
+    "wagmi": "1.4.1"
   },
   "devDependencies": {
     "@prismicio/client": "^7.2.0",

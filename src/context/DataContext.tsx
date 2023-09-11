@@ -15,7 +15,7 @@ export const DataContext = createContext<DataContextType | undefined>(
     undefined
 );
 
-export const DataProvider = ({ children }: any) => {
+export const DataProvider = ({ token, children }: { token: string, children: any }) => {
     const [view] = useSinglePrismicDocument('pwa-view-learn-and-earn');
     const [rawCategories] = useAllPrismicDocumentsByType('pwa-lae-category');
 
@@ -25,10 +25,6 @@ export const DataProvider = ({ children }: any) => {
 
         return { ...next, [id]: { alternate_languages, lang, title } };
     }, {});
-
-    const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjU4ODksImFkZHJlc3MiOiIweDg3Njg1RDFjRjFhMjc5NEY1NDRENzA2OUYwMmVmMzM3ZTIzYjkzN2QiLCJpYXQiOjE2OTMyMzU0NTR9.QFCGgSRKg8fJOhKIz6nEKZsLYnrQPSG2xwWPi-RsRao';
-
   
     return (
         <DataContext.Provider value={{ categories, view, token }}>
