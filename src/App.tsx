@@ -20,6 +20,14 @@ import { useParams } from 'react-router-dom';
 // import { useSinglePrismicDocument, useAllPrismicDocumentsByType } from '@prismicio/react';
 import { DataProvider } from './context/DataContext';
 import Lesson from './components/Lesson/Lesson';
+import {
+	WagmiConfig,
+	useAccount,
+	useNetwork,
+	useWalletClient
+} from "wagmi";
+import { ImpactProvider } from "@impact-market/utils/ImpactProvider";
+import { wagmiConfig } from './helpers/network';
 
 
 const Test = () => {
@@ -28,21 +36,40 @@ const Test = () => {
     return <div>{`Page of Lesson: ${slug} ${uid}`}</div>;
 };
 
-const App = () => {
-    return (
-        <BrowserRouter>
-            <Header />
-            <DataProvider >
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        {/* <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/guides" element={<Guides />} /> */}
-                        <Route path="/:levelId/:uid" element={<Lesson />} />
-                        <Route path="/:levelId" element={<Level />} />
-                    </Routes>
-            </DataProvider>
-        </BrowserRouter>
-    );
-};
+function Wrapper() {
+	const { address } = useAccount();
+	const { data: signer } = useWalletClient();
+	const { chain } = useNetwork();
+
+	return (
+		<ImpactProvider
+			jsonRpc={chain?.rpcUrls.public.http[0] || 'https://forno.celo.org'}
+			signer={signer ?? null}
+			address={address ?? null}
+			networkId={chain?.id || 42220}
+		>
+			<BrowserRouter>
+                <Header />
+                <DataProvider >
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            {/* <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/guides" element={<Guides />} /> */}
+                            <Route path="/:levelId/:uid" element={<Lesson />} />
+                            <Route path="/:levelId" element={<Level />} />
+                        </Routes>
+                </DataProvider>
+            </BrowserRouter>
+		</ImpactProvider>
+	);
+}
+
+function App() {
+	return (
+        <WagmiConfig config={wagmiConfig}>
+            <Wrapper />
+        </WagmiConfig>
+	);
+}
 
 export default App;
