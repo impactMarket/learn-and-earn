@@ -226,7 +226,7 @@ function Home() {
                     ))}
                 </CategoryTabs>
 
-                <Box
+                {/* <Box
                     style={{
                         display: 'flex',
                         flexWrap: 'wrap',
@@ -255,7 +255,7 @@ function Home() {
                     <Box style={{ flexGrow: '1' }}>
                         <Filters property="search" />
                     </Box>
-                </Box>
+                </Box> */}
 
                 {/* <Alert icon="infoCircle" mb={1} title={onlyBeneficiariesTooltip} /> */}
 
