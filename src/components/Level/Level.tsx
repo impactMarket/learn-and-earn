@@ -160,11 +160,11 @@ const Level = () => {
                         }
                     </Text>
 
-                    <Text bold>
+                    {/* <Text bold>
                         {
                             'To qualify for rewards from this course, your balance must exceed 1 cUSD (Celo Dollar).'
                         }
-                    </Text>
+                    </Text> */}
 
                     <Text>
                         {
