@@ -1,7 +1,7 @@
 import { Box, GeneratedPropTypes, Text, TextProps } from '@impact-market/ui';
 import { PrismicRichText } from '@prismicio/react';
 import { RichTextField } from '@prismicio/types';
-import React from 'react';
+// import React from 'react';
 // import TextLink from '../../../components/TextLink';
 import bracked from '../helpers/bracked';
 import parse from '../helpers/parse';

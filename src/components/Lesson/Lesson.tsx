@@ -194,8 +194,6 @@ const Lesson = () => {
     };
 
     useEffect(() => {
-        console.log(slide.length);
-
         if (!!view && slide?.length) {
             setIsLoading(false);
         }

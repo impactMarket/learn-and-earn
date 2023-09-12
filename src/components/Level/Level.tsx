@@ -27,6 +27,7 @@ import { extractLessonIds } from '../../helpers/Helpers';
 import { useContext, useEffect } from 'react';
 import { DataContext } from '../../context/DataContext';
 import { Badge, Button, BackButton, Display, Text } from '../../Theme';
+import Tooltip from '../Tooltip';
 
 const Cell = styled(Box)`
     display: flex;
@@ -48,7 +49,6 @@ const Level = () => {
     const navigate = useNavigate();
 
     // const { title, category } = level?.data;
-    // console.log(lessons);
 
     // const view = data['view-learn-and-earn'];
     // const { level, lessons, categories } = prismic;
@@ -58,7 +58,7 @@ const Level = () => {
     // const { t } = useTranslations();
     const {
         // instructions,
-        // 'threshold-tooltip': thresholdTooltip,
+        'threshold-tooltip': thresholdTooltip,
         // 'only-beneficiaries-tooltip': onlyBeneficiariesTooltip,
         'no-rewards-tooltip': noRewardsTooltip,
         'no-rewards-tooltip-title': noRewardsTooltipTitle,
@@ -74,7 +74,7 @@ const Level = () => {
         'start-lesson': ''
     };
 
-    // const { text: tooltip } = thresholdTooltip[0];
+    const { text: tooltip } = thresholdTooltip[0];
 
     // const auth = useSelector(selectCurrentUser);
     const {
@@ -83,10 +83,6 @@ const Level = () => {
         completedToday,
         rewardAvailable = true
     } = useLessons(lessons, level?.id, token);
-
-    // console.log([lessonsData, totalPoints, completedToday, rewardAvailable]);
-
-    // const router = useRouter();
 
     const startLesson = async (lessonId: number, uid: string) => {
         try {
@@ -119,15 +115,9 @@ const Level = () => {
         }
     };
 
-    // const isLAEUSer = auth?.user?.roles?.some((r: string) =>
-    //     ['beneficiary', 'manager'].includes(r)
-    // );
-    // const tooltipText = !isLAEUSer ? onlyBeneficiariesTooltip : tooltip;
-    // const buttonDisabled = isLAEUSer && !completedToday;
+    const buttonDisabled = !completedToday;
 
     useEffect(() => {
-        console.log(!!lessonsData);
-
         if (!!level && lessonsData?.some((lesson: any) => !!lesson.status)) {
             setIsLoading(false);
         }
@@ -136,7 +126,6 @@ const Level = () => {
     return (
         <>
             <BackButton as="a" onClick={() => navigate(`/`)}>
-                {/* <Label content={<String id="back" />} icon="arrowLeft" /> */}
                 <Label content={'Back'} icon="arrowLeft" />
             </BackButton>
 
@@ -233,9 +222,6 @@ const Level = () => {
                                                     completedToday
                                                 }
                                                 onClick={() =>
-                                                    // router.push(
-                                                    //     `/${lang}/learn-and-earn/${params.level}/${item.uid}`
-                                                    // )
                                                     {
                                                         setIsLoading(true);
                                                         navigate(
@@ -253,25 +239,25 @@ const Level = () => {
                                             (idx - 1 < 0 ||
                                                 lessonsData[idx - 1]?.status ===
                                                     'completed') && (
-                                                // <Tooltip
-                                                //     content={tooltipText}
-                                                //     disabledTooltip={
-                                                //         buttonDisabled
-                                                //     }
-                                                // >
-                                                <Button
-                                                    fluid
-                                                    disabled={completedToday}
-                                                    onClick={() =>
-                                                        startLesson(
-                                                            item.id,
-                                                            item.uid
-                                                        )
+                                                <Tooltip
+                                                    content={tooltip}
+                                                    disabledTooltip={
+                                                        buttonDisabled
                                                     }
                                                 >
-                                                    {startLessonLabel}
-                                                </Button>
-                                                // </Tooltip>
+                                                    <Button
+                                                        fluid
+                                                        disabled={completedToday}
+                                                        onClick={() =>
+                                                            startLesson(
+                                                                item.id,
+                                                                item.uid
+                                                            )
+                                                        }
+                                                    >
+                                                        {startLessonLabel}
+                                                    </Button>
+                                                </Tooltip>
                                             )}
 
                                         {item.status === 'completed' && (
@@ -280,24 +266,6 @@ const Level = () => {
                                                 <Icon icon="check" s700 />
                                             </Badge>
                                         )}
-
-                                        {/* TEST */}
-                                        {/* <Badge bgS50 s700>
-                                            {'Completed'}
-                                            <Icon icon="check" s700 />
-                                        </Badge> */}
-
-                                        {/* <Button
-                                            fluid
-                                            // disabled={
-                                            //     completedToday || !isLAEUSer
-                                            // }
-                                            onClick={() =>
-                                                startLesson(item.id, item.uid)
-                                            }
-                                        >
-                                            {startLessonLabel}
-                                        </Button> */}
                                     </Cell>
                                 </Box>
                                 <Divider />

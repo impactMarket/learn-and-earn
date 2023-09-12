@@ -17,6 +17,7 @@
     "@impact-market/ui": "^1.6.2",
     "@impact-market/utils": "4.0.6-beta.1",
     "@prismicio/react": "^2.7.2",
+    "@tippyjs/react": "^4.2.6",
     "axios": "0.27.2",
     "bignumber.js": "9.1.2",
     "ethers": "5.7.2",

@@ -18,9 +18,6 @@ const Prismic = {
             // });
             const [response] = usePrismicDocumentByUID('pwa-lae-lesson',lessonUid) as any;
 
-            console.log(lessonUid);
-            
-
             const { alternate_languages, data, id, lang, uid } = response;
 
             return { alternate_languages, ...data, id, lang, uid };

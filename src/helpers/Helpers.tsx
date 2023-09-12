@@ -5,10 +5,6 @@ import RichText from '../libs/Prismic/components/RichText';
 // import String from '../libs/Prismic/components/String';
 
 export const ctaText = (status: string, reward: number, earnRewardsCopy: any) => {
-    // const { view } = usePrismicData();
-    // const { earnRewards } = view.data;
-    // console.log(earnRewardsCopy);
-
     switch (status) {
         case 'available':
             // return isLAEUser ? (

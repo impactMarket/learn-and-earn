@@ -26,13 +26,6 @@ export const DataProvider = ({
     const [view] = useSinglePrismicDocument('pwa-view-learn-and-earn');
     const [rawCategories] = useAllPrismicDocumentsByType('pwa-lae-category');
     const [isLoading, setIsLoading] = useState(true);
-    // let isLoading = true;
-
-    //     const addTest = (state: boolean) => {
-    //         console.log(state);
-    //     setIsLoading(state)
-    // };
-
     const categories = rawCategories?.reduce((next, current) => {
         const { id, lang, data, alternate_languages } = current;
         const { title } = data;
