@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { usePrismicDocumentByUID, usePrismicDocumentsByIDs } from '@prismicio/react';
 
 const Prismic = {
@@ -16,9 +17,6 @@ const Prismic = {
             //     lang: locale
             // });
             const [response] = usePrismicDocumentByUID('pwa-lae-lesson',lessonUid) as any;
-
-            console.log(lessonUid);
-            
 
             const { alternate_languages, data, id, lang, uid } = response;
 
@@ -74,7 +72,7 @@ const Prismic = {
             //     lang
             // });
             const [response] = usePrismicDocumentByUID('pwa-lae-level', levelId) as any;
-            console.log(response);
+            // console.log(response);
             
             const {
                 alternate_languages,

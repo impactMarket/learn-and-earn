@@ -37,7 +37,7 @@ const Input: React.FC<InputProps & BaseInputProps> = (props) => {
         }, [inputWatch]);
     }
 
-    const setValue = (e: any, onChange: Function) => {
+    const setValue = (e: any, onChange: (e: any) => void) => {
         setCount(e.target.value.length);
         onChange(e);
     };

@@ -8,6 +8,8 @@ export const HeaderWrapper = styled.div`
     height: 2.3rem;
     justify-content: center;
     padding: 1rem;
+    position: relative;
+    z-index: 2;
 
     > div {
         align-items: center;

@@ -1,7 +1,7 @@
 import { Box, GeneratedPropTypes, Text, TextProps } from '@impact-market/ui';
 import { PrismicRichText } from '@prismicio/react';
 import { RichTextField } from '@prismicio/types';
-import React from 'react';
+// import React from 'react';
 // import TextLink from '../../../components/TextLink';
 import bracked from '../helpers/bracked';
 import parse from '../helpers/parse';
@@ -14,10 +14,10 @@ type SerializerOptions = {
 
 type SerializerFunction = (...args: any | any[]) => any;
 
-// eslint-disable-next-line max-params
+ 
 const serializer: SerializerFunction = ({
-    children,
-    key,
+    // children,
+    // key,
     node,
     type,
     ...options
@@ -153,7 +153,7 @@ const RichText = (props: RichTextProps) => {
         <Text as="div" {...forwardProps}>
             {/* TODO use UI RichContent comp to wrap this */}
             <PrismicRichText
-                // eslint-disable-next-line max-params
+                 
                 components={(type, node, content, children, key) =>
                     serializer({
                         children,
