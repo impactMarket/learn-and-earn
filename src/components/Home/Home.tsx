@@ -21,6 +21,8 @@ import queryString from 'query-string';
 import RichText from '../../libs/Prismic/components/RichText';
 import useLevels from '../../hooks/useLevels';
 import useSWR from 'swr';
+// import useLearnAndEarn from '../../hooks/useLearnAndEarn';
+// import { useAccount } from 'wagmi';
 
 
 
@@ -29,6 +31,8 @@ const ITEMS_PER_PAGE = 6;
 function Home() {
     const { view, categories, token }: any = useContext(DataContext);
     const [searchParams, setSearchParams] = useSearchParams();
+    // const { claimRewardForLevels } = useLearnAndEarn();
+	// const { address } = useAccount();
 
     const {
         'earn-rewards': earnRewards,
@@ -171,6 +175,7 @@ function Home() {
 
     return (
         <>
+            {/* <button onClick={() => claimRewardForLevels(address || '0x0', [0], [0], ['0x70397b16b32e191f16549f66b953d16b931169dd02ccb3dddac29e6b7dfebd5834f24770098467dcd1fbe4baaa0c0b9eb2d3157fb80a3dbc57d9bc348c6bca491b'])}>Claim</button> */}
             <Box flex style={{ justifyContent: 'space-between' }}>
                 <Box flex fDirection={'column'}>
                     <Heading>
