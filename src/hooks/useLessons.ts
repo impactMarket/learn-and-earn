@@ -1,13 +1,19 @@
-// import config from '../../../config';
 import useSWR from 'swr';
+// import { useContext } from 'react';
+// import { DataContext } from '../context/DataContext';
 
 export default function useLessons(lessons: any, levelId: any, token?: string) {
+    // const { setIsLoading }: any = useContext(DataContext);
+    // console.log({lessons, levelId, token});
+    
     const fetcher = (url: string) =>
         fetch(import.meta.env.VITE_API_URL + url, {
             headers: { Authorization: `Bearer ${token}` }
         }).then((res) => res.json());
 
-    if (token) {
+        const shouldCallUseSWR = !!token;
+
+    // if (token) {
         const { data } = useSWR<
             {
                 data: {
@@ -18,7 +24,7 @@ export default function useLessons(lessons: any, levelId: any, token?: string) {
                 };
             },
             string
-        >(`/learn-and-earn/levels/${levelId}`, fetcher);
+        >(shouldCallUseSWR ? `/learn-and-earn/levels/${levelId}?language=en` : null, fetcher);
 
         const { completedToday = false } = data?.data ?? {};
 
@@ -38,6 +44,8 @@ export default function useLessons(lessons: any, levelId: any, token?: string) {
 
             return formattedLessons?.filter((e: any) => e).pop();
         });
+        
+        // setIsLoading(false)
 
         return {
             completedToday,
@@ -48,12 +56,12 @@ export default function useLessons(lessons: any, levelId: any, token?: string) {
             rewardAvailable: data?.data?.rewardAvailable || true,
             totalPoints: data?.data?.totalPoints || 0
         };
-    }
+    // }
 
-    return {
-        completedToday: true,
-        data: lessons,
-        rewardAvailable: true,
-        totalPoints: 0
-    };
+    // return {
+    //     completedToday: true,
+    //     data: lessons,
+    //     rewardAvailable: true,
+    //     totalPoints: 0
+    // };
 }

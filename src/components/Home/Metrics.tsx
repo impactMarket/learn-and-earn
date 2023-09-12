@@ -1,43 +1,34 @@
 import {
     Box,
-    Button,
+    // Button,
     Card,
     Display,
-    Grid,
+    // Grid,
     ProgressCard,
     toast
 } from '@impact-market/ui';
 // import { selectCurrentUser } from '../../state/slices/auth';
 // import { useLearnAndEarn } from '@impact-market/utils/useLearnAndEarn';
 // import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Message from '../../libs/Prismic/components/Message';
 import RichText from '../../libs/Prismic/components/RichText';
-import String from '../../libs/Prismic/components/String';
+// import String from '../../libs/Prismic/components/String';
 // import config from '../../../config';
 // import processTransactionError from '../../utils/processTransactionError';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 // import useTranslations from '../../libs/Prismic/hooks/useTranslations';
 
-import { MetricsWrapper, RewardsButton } from './Styles'
-
-// const CardsGrid = styled(Grid)`
-//     flex-wrap: wrap;
-
-//     .grid-col {
-//         flex: 1;
-//         min-width: 17rem;
-//     }
-// `;
-
-// const RewardsButton = styled(Button)`
-//     border: transparent;
-//     width: fit-content;
-// `;
+import { MetricsWrapper, RewardsButton } from './Styles';
+import { DataContext } from '../../context/DataContext';
+import useLearnAndEarn from '../../hooks/useLearnAndEarn';
+import { useAccount } from 'wagmi';
 
 const Metrics = (props: any) => {
     const { metrics } = props;
     console.log(metrics);
+    
+    const { token }: any = useContext(DataContext);
 
     const {
         amount = false,
@@ -46,7 +37,8 @@ const Metrics = (props: any) => {
     } = metrics?.claimRewards?.[0] || {};
 
     // const auth = useSelector(selectCurrentUser);
-    // const { claimRewardForLevels } = useLearnAndEarn();
+    const { claimRewardForLevels } = useLearnAndEarn();
+    const { address } = useAccount();
     const [isLoading, setIsLoading] = useState(false);
     // const { t } = useTranslations();
 
@@ -62,42 +54,45 @@ const Metrics = (props: any) => {
         setIsLoading(true);
         let response;
 
-        // const {
-        //     amount = false,
-        //     levelId = false,
-        //     signature: signatures = false
-        // } = metrics?.claimRewards[0];
+        const {
+            amount = 0,
+            levelId = 0,
+            signature: signatures = false
+        } = metrics?.claimRewards[0];
 
-        // try {
-        //     response = await claimRewardForLevels(
-        //         auth.user.address.toString(),
-        //         [levelId],
-        //         [amount],
-        //         [signatures]
-        //     );
-        // } catch (error) {
-        //     setIsLoading(false);
-        //     processTransactionError(error, 'claim_lae_rewards');
-        //     console.log(error);
-        //     toast.error(<Message id="errorOccurred" />);
-        //     throw Error;
-        // }
+        try {
+            response = await claimRewardForLevels(
+                address || '0x0',
+                [levelId],
+                [parseInt(amount)],
+                [signatures]
+            );
+        } catch (error) {
+            setIsLoading(false);
+            // processTransactionError(error, 'claim_lae_rewards');
+            console.log(error);
+            toast.error(<Message id="errorOccurred" />);
+            throw Error;
+        }
 
-        // const { transactionHash } = response;
+        console.log(response);
+        
 
-        // await fetch(`${config.baseApiUrl}/learn-and-earn/levels`, {
-        //     body: JSON.stringify({
-        //         transactionHash
-        //     }),
-        //     headers: {
-        //         Accept: 'application/json',
-        //         Authorization: `Bearer ${auth.token}`,
-        //         'Content-Type': 'application/json'
-        //     },
-        //     method: 'PUT'
-        // });
+        const { transactionHash } = response;
 
-        toast.success(<Message id="successfullyClaimed" />);
+        await fetch(`${import.meta.env.VITE_API_URL}/learn-and-earn/levels`, {
+            body: JSON.stringify({
+                transactionHash
+            }),
+            headers: {
+                Accept: 'application/json',
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            method: 'PUT'
+        });
+
+        toast.success(`You've successfully claimed your rewards.`);
         setIsLoading(false);
     };
 
@@ -108,8 +103,8 @@ const Metrics = (props: any) => {
                     label={item.label}
                     progress={(item?.completed / item?.total) * 100}
                     pathColor="p600"
-                    style={{flex: '1'}}
-                    className='stats'
+                    style={{ flex: '1' }}
+                    className="stats"
                 >
                     <Display semibold>
                         {`${item?.completed ?? item?.received} `}
@@ -124,35 +119,42 @@ const Metrics = (props: any) => {
                     </Display>
                 </ProgressCard>
             ))}
-            {hasRewards && <Card className='claim-rewards' style={{ boxSizing: 'border-box', flex: '1' }}>
-                <Box
-                    style={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}
+            {hasRewards && (
+                <Card
+                    className="claim-rewards"
+                    style={{ boxSizing: 'border-box', flex: '1' }}
                 >
-                    <RichText
-                        center
-                        g500
-                        medium
-                        small
-                        mb="1rem"
-                        content={
-                            hasRewards ? props.copy.success : props.copy.failed
-                        }
-                    />
-                    <RewardsButton
-                        onClick={claimRewards}
-                        {...disabled}
-                        disabled={!hasRewards}
-                        isLoading={isLoading}
+                    <Box
+                        style={{
+                            alignItems: 'center',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}
                     >
-                        {/* <String id="claimRewards" /> */}
-                        {'Claim Rewards'}
-                    </RewardsButton>
-                </Box>
-            </Card>}
+                        <RichText
+                            center
+                            g500
+                            medium
+                            small
+                            mb="1rem"
+                            content={
+                                hasRewards
+                                    ? props.copy.success
+                                    : props.copy.failed
+                            }
+                        />
+                        <RewardsButton
+                            onClick={claimRewards}
+                            {...disabled}
+                            disabled={!hasRewards}
+                            isLoading={isLoading}
+                        >
+                            {/* <String id="claimRewards" /> */}
+                            {'Claim Rewards'}
+                        </RewardsButton>
+                    </Box>
+                </Card>
+            )}
         </MetricsWrapper>
     );
 };

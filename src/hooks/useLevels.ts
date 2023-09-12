@@ -1,9 +1,4 @@
-// import { selectCurrentUser } from '../../state/slices/auth';
-// import { useSelector } from 'react-redux';
-// import config from '../../../config';
 import useSWR from 'swr';
-
-// import { useEffect, useState } from 'react';
 
 export default function useLevels(levels: any, token?: string) {
     const fetcher = (url: string) =>
@@ -11,11 +6,14 @@ export default function useLevels(levels: any, token?: string) {
             headers: { Authorization: `Bearer ${token}`, 'client-id': 2 } as any
         }).then((res) => res.json());
 
-    const { data: apiData, error } = useSWR(`/learn-and-earn/levels?language=en`, fetcher);
-    // const auth = useSelector(selectCurrentUser);
-    // const [testData, setTestData] = useState({});
+    const shouldCallUseSWR = !!token;
 
-    // console.log(levels);
+    const { data: apiData, error } = useSWR(
+        shouldCallUseSWR ? '/learn-and-earn/levels?language=en' : null,
+        fetcher
+    );
+
+    // const { data: apiData, error } = useSWR(`/learn-and-earn/levels?language=en`, fetcher);
 
     const formatedResponse =
         levels &&
@@ -39,27 +37,29 @@ export default function useLevels(levels: any, token?: string) {
             };
         }, {}) as any);
 
-    let data =
-        formatedResponse &&
-        Object.values(formatedResponse).map((item: any) => {
-            return {
-                ...item,
-                id: null,
-                status: 'available',
-                totalLessons: item?.lessons?.length,
-                totalReward: item?.data?.reward
-            };
-        });
+    let data = [];
 
-    if (!token) {
-        return {
-            data,
-            levelsLoading: false
-        };
-    }
+    // let data =
+    //     formatedResponse &&
+    //     Object.values(formatedResponse).map((item: any) => {
+    //         return {
+    //             ...item,
+    //             id: null,
+    //             status: 'available',
+    //             totalLessons: item?.lessons?.length,
+    //             totalReward: item?.data?.reward
+    //         };
+    //     });
 
-    if (apiData) {
-        data = apiData?.data?.rows.map((item: any) => {
+    // if (!token) {
+    //     return {
+    //         data,
+    //         levelsLoading: false
+    //     };
+    // }
+
+    if (apiData?.success) {
+        data = apiData?.data?.rows?.map((item: any) => {
             const levelData: {
                 totalLessons: number;
                 totalReward: number;
@@ -88,7 +88,6 @@ export default function useLevels(levels: any, token?: string) {
     const levelsLoading = !data && !error;
 
     return {
-        // data
         data: finalLevels && finalLevels.filter((item: any) => item !== null),
         levelsLoading
     };

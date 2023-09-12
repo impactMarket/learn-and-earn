@@ -24,11 +24,15 @@ import useSWR from 'swr';
 // import useLearnAndEarn from '../../hooks/useLearnAndEarn';
 // import { useAccount } from 'wagmi';
 
-
+// import { useContext } from 'react';
+// import { DataContext } from '../context/DataContext';
 
 const ITEMS_PER_PAGE = 6;
 
 function Home() {
+    
+    const { setIsLoading }: any = useContext(DataContext);
+
     const { view, categories, token }: any = useContext(DataContext);
     const [searchParams, setSearchParams] = useSearchParams();
     // const { claimRewardForLevels } = useLearnAndEarn();
@@ -152,10 +156,23 @@ function Home() {
             !!categoryString ? el.category === categoryString : el
         );
 
-    const TabItems: string[] = ['started', 'available', 'completed'];
+    // const TabItems: string[] = ['started', 'available', 'completed'];
+
     const filterLevels = (filter: string) => {
         return data?.filter((el: any) => el.status === filter);
     };
+
+    const TabItems = [];
+
+    if (filterLevels('started').length) {
+        TabItems.push('started');
+    }
+
+    TabItems.push('available');
+
+    if (filterLevels('completed').length) {
+        TabItems.push('completed');
+    }
 
     //  Handle Pagination
     const handlePageClick = (event: any, direction?: number) => {
@@ -172,6 +189,14 @@ function Home() {
         setCurrentPage(page);
         setSearchParams({ page });
     };
+
+    useEffect(() => {
+        if (filteredData.length) {
+            // debugger
+            setIsLoading(false);
+        }
+        
+    },[data, filteredData])
 
     return (
         <>

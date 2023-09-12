@@ -2,7 +2,8 @@ import {
     Button as ButtonUI,
     Display as DisplayUI,
     Box,
-    Text as TextUI
+    Text as TextUI,
+    Badge as BadgeUI
 } from '@impact-market/ui';
 import { colors } from '@impact-market/ui';
 import styled from 'styled-components';
@@ -10,10 +11,12 @@ import styled from 'styled-components';
 export const Button = styled(ButtonUI)`
     background-color: #5a6fef;
     transition: opacity 0.2s ease-in-out;
+    width: ${(props) => (props.fluid ? '100%' : 'auto')};
 
     &:not(:disabled):hover {
         background-color: #5a6fef;
         opacity: 0.5;
+        border: none;
     }
 
     > span {
@@ -48,4 +51,11 @@ export const Text = styled(TextUI)`
    font-weight: ${(props) => (props.bold ? '600' : '400')};
    color: ${(props) => (props.g500 ? `${colors.g500}` : `${colors.g800}`)};
    margin-bottom: ${(props) => (props.noMargin ? '0' : '1rem')};
+`;
+
+export const Badge = styled(BadgeUI)`
+    background-color: ${colors.s50};
+    color: ${colors.s700};
+    font-family: Inter, sans-serif;
+    // position: absolute;
 `;

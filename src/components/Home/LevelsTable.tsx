@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 
 const LevelsTable = (props: any) => {
     const { data, pageStart, pageEnd, lang, earnRewardsCopy } = props;
-    const { categories }: any = useContext(DataContext);
+    const { categories, setIsLoading }: any = useContext(DataContext);
     let navigate = useNavigate();
     // console.log(categories);
     // const router = useRouter();
@@ -47,6 +47,7 @@ const LevelsTable = (props: any) => {
                                 label={categories[elem?.category]?.title}
                                 onClick={
                                     () => {
+                                        setIsLoading(true);
                                         navigate(`/${elem?.uid}`);
                                     }
                                 }

@@ -1,36 +1,28 @@
+// import Video from '../Video';
 import {
     Box,
-    // Button,
+    CircledIcon,
+    Col,
     Display,
     Divider,
     Label,
     OptionItem,
     Pagination,
     Text,
-    ViewContainer,
-    openModal,
+    colors,
     toast
 } from '@impact-market/ui';
-// import { selectCurrentUser } from '../../../state/slices/auth';
-// import { usePrismicData } from '../../../libs/Prismic/components/PrismicDataProvider';
-// import { useRouter } from 'next/router';
-// import { useSelector } from 'react-redux';
-import { useState } from 'react';
-import Prismic from '../../helpers/Prismic';
-// import Message from '../../../libs/Prismic/components/Message';
-import RichText from '../../libs/Prismic/components/RichText';
-// import String from '../../../libs/Prismic/components/String';
-// import Video from '../Video';
-// import config from '../../../../config';
-// import useFilters from '../../../hooks/useFilters';
-// import useTranslations from '../../../libs/Prismic/hooks/useTranslations';
-
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { useContext } from 'react';
-import { DataContext } from '../../context/DataContext';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
 import { Button, BackButton } from '../../Theme';
+import { DataContext } from '../../context/DataContext';
+import { useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSinglePrismicDocument } from '@prismicio/react';
+import { useState, useEffect } from 'react';
+import Modal from '../../modals/Modal';
+import Prismic from '../../helpers/Prismic';
+import queryString from 'query-string';
+import RichText from '../../libs/Prismic/components/RichText';
 
 const initialAnswers = [
     [false, false, false],
@@ -41,22 +33,31 @@ const initialAnswers = [
 const QUIZ_LENGTH = 3;
 
 const Lesson = (props: any) => {
-    // const { prismic, lang, params } = props;
+    const [modal] = useSinglePrismicDocument('pwa-modals');
+    const [wrongModalOpen, setWrongModalOpen] = useState(false);
+    const [successModalOpen, setSuccessModalOpen] = useState(false);
+    const [attempts, setAttempts] = useState(0);
+    const {
+        'lae-failed-lesson-description': failedDescription,
+        'lae-failed-lesson-title': failedTitle,
+        'lae-success-lesson-description': successDescription,
+        'lae-success-lesson-title': succesTitle
+    } = modal?.data ?? {
+        'lae-failed-lesson-description': '',
+        'lae-failed-lesson-title': '',
+        'lae-success-lesson-description': '',
+        'lae-success-lesson-title': ''
+    };
+
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const queryParams = queryString.parse(location.search);
     const { page } = queryParams;
-    console.log(searchParams);
-    // debugger
+
     const navigate = useNavigate();
 
-    // const { prismicLesson } = prismic;
     const { levelId = '', uid: lessonUid = '' } = useParams();
-    // console.log(uid);
-
     const prismicLesson = Prismic.getLessonByUID({ lessonUid });
-    console.log(prismicLesson);
-    // debugger
 
     const {
         tutorial: content,
@@ -71,13 +72,9 @@ const Lesson = (props: any) => {
         readTime: '',
         id: ''
     };
-    // console.log(content);
 
-    // const { t } = useTranslations();
-    const { view }: any = useContext(DataContext);
-    // console.log(view);
+    const { view, setIsLoading, token }: any = useContext(DataContext);
 
-    // const { viewLearnAndEarn } = usePrismicData().data as any;
     const {
         'start-quiz': startQuiz,
         'complete-content': completeContent,
@@ -88,21 +85,9 @@ const Lesson = (props: any) => {
         sponsored: ''
     };
 
-    // console.log(view);
-
-    // console.log(startQuiz);
-    // debugger
-
-    // const { update, getByKey } = useFilters();
-
-    // const [currentPage, setCurrentPage] = useState(
-    //     getByKey('page') ? +getByKey('page') : 0
-    // );
     const [currentPage, setCurrentPage] = useState(parseInt(page));
 
     const [isQuiz, setIsQuiz] = useState(false);
-    // const auth = useSelector(selectCurrentUser);
-    // const router = useRouter();
     const [progress, setProgress] = useState([currentPage]);
     const [userAnswers, setUserAnswers] = useState(initialAnswers);
 
@@ -147,11 +132,16 @@ const Lesson = (props: any) => {
 
         if (slide[0]?.type) {
             if (slide[0].type === 'image') {
-                return <RichText content={slide} style={{ width: '100%', flex: 1 }} />;
+                return (
+                    <RichText
+                        content={slide}
+                        style={{ width: '100%' }}
+                    />
+                );
             }
 
             return (
-                <Box style={{ width: '100%', maxWidth: '36.25rem', flex: 1 }}>
+                <Box style={{ width: '100%', maxWidth: '36.25rem' }}>
                     <RichText content={slide} pb=".5rem" />
                 </Box>
             );
@@ -167,16 +157,63 @@ const Lesson = (props: any) => {
         return <></>;
     };
 
+    const postAnswers = async () => {
+        // Post answers
+        setIsLoading(true);
+        const answers = userAnswers
+            .reduce((next: any, current: any) => {
+                return [current.findIndex((el: any) => el), ...next];
+            }, [])
+            .reverse();
+        const res = await fetch(
+            `${import.meta.env.VITE_API_URL}/learn-and-earn/lessons`,
+            {
+                body: JSON.stringify({
+                    answers,
+                    lesson: id
+                }),
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                method: 'PUT'
+            }
+        );
+        const response = await res.json();
+        if (response?.data?.success === false) {
+            setAttempts(response?.data?.attempts);
+            setWrongModalOpen(true);
+        } else if (response?.data?.success) {
+            setSuccessModalOpen(true);
+        } else {
+            toast.error('An error has occurred');
+            console.log('error');
+        }
+    };
+
+    useEffect(() => {
+        console.log(slide.length);
+
+        if (!!view && slide?.length) {
+            setIsLoading(false);
+        }
+    }, [view, slide]);
+
+    const attemptsNumber = attempts <= 3 ? (3 - attempts).toString() : '0';
+
     return (
-        <Box style={{display: 'flex',
-            flexDirection: 'column', height: '100%'}}>
+        <Box
+            style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+        >
             {!isQuiz && (
-                <BackButton as="a" onClick={() => navigate(`/${levelId}`)}>
-                    {/* <Label
-                        content={<String id="back" />}
-                        icon="arrowLeft"
-                        mb="1rem"
-                    /> */}
+                <BackButton
+                    as="a"
+                    onClick={() => {
+                        setIsLoading(true);
+                        navigate(`/${levelId}`);
+                    }}
+                >
                     <Label content={'Back'} icon="arrowLeft" mb="1rem" />
                 </BackButton>
             )}
@@ -250,7 +287,7 @@ const Lesson = (props: any) => {
                 )}
 
                 {!isQuiz && currentPage + 1 === content.length && (
-                    <Box mt="1rem">
+                    <Box style={{marginTop: '1rem'}}>
                         <Button
                             disabled={!canGotoQuiz}
                             // fluid
@@ -272,61 +309,92 @@ const Lesson = (props: any) => {
                 {isQuiz && currentPage + 1 === QUIZ_LENGTH && (
                     <Box mt="1rem">
                         <Button
-                            // fluid
-                            secondary
-                            // xl
                             disabled={!(progress.length == content.length)}
-                            onClick={async () => {
-                                // Post answers
-                                // const answers = userAnswers
-                                //     .reduce((next: any, current: any) => {
-                                //         return [
-                                //             current.findIndex((el: any) => el),
-                                //             ...next
-                                //         ];
-                                //     }, [])
-                                //     .reverse();
-                                // const res = await fetch(
-                                //     `${config.baseApiUrl}/learn-and-earn/lessons`,
-                                //     {
-                                //         body: JSON.stringify({
-                                //             answers,
-                                //             lesson: id
-                                //         }),
-                                //         headers: {
-                                //             Accept: 'application/json',
-                                //             Authorization: `Bearer ${auth.token}`,
-                                //             'Content-Type': 'application/json'
-                                //         },
-                                //         method: 'PUT'
-                                //     }
-                                // );
-                                // const response = await res.json();
-                                // if (response?.data?.success === false) {
-                                //     openModal('laeFailedLesson', {
-                                //         attempts: response?.data?.attempts,
-                                //         onClose: () => {
-                                //             toggleQuiz(false);
-                                //             setUserAnswers(initialAnswers);
-                                //         }
-                                //     });
-                                // } else if (response?.data?.success) {
-                                //     openModal('laeSuccessLesson', {
-                                //         onClose: () =>
-                                //             router.push(
-                                //                 `/${lang}/learn-and-earn/${params.level}`
-                                //             )
-                                //     });
-                                // } else {
-                                //     toast.error(<Message id="errorOccurred" />);
-                                // }
-                            }}
+                            onClick={postAnswers}
                         >
                             {/* {t('submit')} */}
-                            {'submit'}
+                            {'Submit'}
                         </Button>
                     </Box>
                 )}
+
+                <Modal isOpen={wrongModalOpen}>
+                    <Box>
+                        <Col>
+                            <CircledIcon
+                                icon="alertCircle"
+                                large
+                                style={{
+                                    color: `${colors.e600}`,
+                                    background: '#FEE4E2'
+                                }}
+                            />
+                        </Col>
+                    </Box>
+                    <Box style={{ marginTop: '1.25rem' }}>
+                        <RichText content={failedTitle} large g900 semibold />
+                    </Box>
+                    <Box style={{ marginTop: '1.25rem', marginBottom: '2rem' }}>
+                        <RichText
+                            content={failedDescription}
+                            medium
+                            g500
+                            variables={{ attempts: attemptsNumber }}
+                        />
+                    </Box>
+                    <Button
+                        fluid
+                        style={{
+                            background: 'white',
+                            color: '#344054',
+                            borderColor: '#D0D5DD'
+                        }}
+                        onClick={() => {
+                            toggleQuiz(false);
+                            setUserAnswers(initialAnswers);
+                            setWrongModalOpen(false);
+                        }}
+                        mt="2rem"
+                    >
+                        {'Continue'}
+                    </Button>
+                </Modal>
+
+                <Modal isOpen={successModalOpen}>
+                    <Box>
+                        <Col>
+                            <CircledIcon
+                                icon="checkBold"
+                                large
+                                style={{
+                                    color: `${colors.s700}`,
+                                    background: '#D1FADF'
+                                }}
+                            />
+                        </Col>
+                    </Box>
+                    <Box style={{ marginTop: '1.25rem' }}>
+                        <RichText content={succesTitle} large g900 />
+                    </Box>
+                    <Box style={{ marginTop: '1.25rem', marginBottom: '2rem' }}>
+                        <RichText content={successDescription} medium g500 />
+                    </Box>
+                    <Button
+                        fluid
+                        style={{
+                            background: 'white',
+                            color: '#344054',
+                            borderColor: '#D0D5DD'
+                        }}
+                        onClick={() => {
+                            setIsLoading(true);
+                            navigate(`/${levelId}`);
+                        }}
+                        mt="2rem"
+                    >
+                        {'Continue'}
+                    </Button>
+                </Modal>
 
                 <Box style={{ width: '100%' }}>
                     <Divider />

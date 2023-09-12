@@ -7,8 +7,7 @@ import String from '../libs/Prismic/components/String';
 export const ctaText = (status: string, reward: number, earnRewardsCopy: any) => {
     // const { view } = usePrismicData();
     // const { earnRewards } = view.data;
-    console.log(earnRewardsCopy);
-    
+    // console.log(earnRewardsCopy);
 
     switch (status) {
         case 'available':
@@ -23,9 +22,11 @@ export const ctaText = (status: string, reward: number, earnRewardsCopy: any) =>
             return <RichText content={earnRewardsCopy} medium variables={{ reward }} />
 
         case 'started':
-            return <String id="continue" />;
+            // return <String id="continue" />;
+            return 'Continue';
         case 'completed':
-            return <Message id="viewLessons" />;
+            // return <Message id="viewLessons" />;
+            return 'View Lessons'
         default:
             return '';
     }

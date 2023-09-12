@@ -74,7 +74,7 @@ const Prismic = {
             //     lang
             // });
             const [response] = usePrismicDocumentByUID('pwa-lae-level', levelId) as any;
-            console.log(response);
+            // console.log(response);
             
             const {
                 alternate_languages,
