@@ -74,7 +74,7 @@ function Wrapper() {
 
 function App() {
     if (
-        (window as any).ethereum.isMinyPay ||
+        (window as any).ethereum.isMiniPay ||
         ((window as any).ethereum.isMetaMask &&
             import.meta.env.VITE_ENABLE_IN_BROWSER === 'true')
     ) {
