@@ -1,8 +1,8 @@
 // import { usePrismicData } from '../libs/Prismic/components/PrismicDataProvider';
-import Message from '../libs/Prismic/components/Message';
+// import Message from '../libs/Prismic/components/Message';
 // import React from 'react';
 import RichText from '../libs/Prismic/components/RichText';
-import String from '../libs/Prismic/components/String';
+// import String from '../libs/Prismic/components/String';
 
 export const ctaText = (status: string, reward: number, earnRewardsCopy: any) => {
     // const { view } = usePrismicData();

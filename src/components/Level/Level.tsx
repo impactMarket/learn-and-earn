@@ -7,7 +7,7 @@ import {
     Divider,
     Icon,
     Label,
-    ViewContainer
+    // ViewContainer
 } from '@impact-market/ui';
 // import { selectCurrentUser } from '../../../state/slices/auth';
 // import { useRouter } from 'next/router';
@@ -24,7 +24,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 // import { usePrismicDocumentByUID, usePrismicDocumentsByIDs } from '@prismicio/react';
 import Prismic from '../../helpers/Prismic';
 import { extractLessonIds } from '../../helpers/Helpers';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { DataContext } from '../../context/DataContext';
 import { Badge, Button, BackButton, Display, Text } from '../../Theme';
 
@@ -45,21 +45,21 @@ const Level = () => {
     const level = Prismic.getLevelByUID({ levelId });
     const lessonIds = !!level && extractLessonIds(level);
     const lessons = Prismic.getLessonsByIDs({ lessonIds });
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     // const { title, category } = level?.data;
-    console.log(lessons);
+    // console.log(lessons);
 
     // const view = data['view-learn-and-earn'];
     // const { level, lessons, categories } = prismic;
 
-    const { title, category } = level?.data;
+    const { title, category } = level?.data || {};
 
     // const { t } = useTranslations();
     const {
-        instructions,
-        'threshold-tooltip': thresholdTooltip,
-        'only-beneficiaries-tooltip': onlyBeneficiariesTooltip,
+        // instructions,
+        // 'threshold-tooltip': thresholdTooltip,
+        // 'only-beneficiaries-tooltip': onlyBeneficiariesTooltip,
         'no-rewards-tooltip': noRewardsTooltip,
         'no-rewards-tooltip-title': noRewardsTooltipTitle,
         'message-pointsTotal': totalPointsLabel,
@@ -74,7 +74,7 @@ const Level = () => {
         'start-lesson': ''
     };
 
-    const { text: tooltip } = thresholdTooltip[0];
+    // const { text: tooltip } = thresholdTooltip[0];
 
     // const auth = useSelector(selectCurrentUser);
     const {

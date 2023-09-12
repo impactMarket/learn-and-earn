@@ -32,7 +32,7 @@ const initialAnswers = [
 
 const QUIZ_LENGTH = 3;
 
-const Lesson = (props: any) => {
+const Lesson = () => {
     const [modal] = useSinglePrismicDocument('pwa-modals');
     const [wrongModalOpen, setWrongModalOpen] = useState(false);
     const [successModalOpen, setSuccessModalOpen] = useState(false);
@@ -50,6 +50,7 @@ const Lesson = (props: any) => {
     };
 
     const location = useLocation();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [searchParams, setSearchParams] = useSearchParams();
     const queryParams = queryString.parse(location.search);
     const { page } = queryParams;

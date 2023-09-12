@@ -72,7 +72,7 @@ export default function useLevels(levels: any, token?: string) {
                 apiLevel = formatedResponse[item.prismicId];
             }
 
-            return !!apiLevel
+            return apiLevel
                 ? {
                       ...apiLevel,
                       ...levelData,

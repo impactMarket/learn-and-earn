@@ -53,12 +53,12 @@ const Metrics = (props: any) => {
     const claimRewards = async () => {
         setIsLoading(true);
         let response;
-
+        const metricsClaimRewards = metrics?.claimRewards;
         const {
             amount = 0,
             levelId = 0,
             signature: signatures = false
-        } = metrics?.claimRewards[0];
+        } = metricsClaimRewards?.[0] || {};
 
         try {
             response = await claimRewardForLevels(

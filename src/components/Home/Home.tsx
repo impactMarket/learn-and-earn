@@ -18,7 +18,7 @@ import Filters from '../Filters';
 import LevelsTable from './LevelsTable';
 import Metrics from './Metrics';
 import queryString from 'query-string';
-import RichText from '../../libs/Prismic/components/RichText';
+// import RichText from '../../libs/Prismic/components/RichText';
 import useLevels from '../../hooks/useLevels';
 import useSWR from 'swr';
 // import useLearnAndEarn from '../../hooks/useLearnAndEarn';
@@ -40,8 +40,8 @@ function Home() {
 
     const {
         'earn-rewards': earnRewards,
-        'heading-content': headingContent,
-        'heading-title': headingTitle,
+        // 'heading-content': headingContent,
+        // 'heading-title': headingTitle,
         'claim-available': claimAvailable = '',
         'claim-disabled': claimDisabled = ''
         // 'only-beneficiaries-tooltip': onlyBeneficiariesTooltip = ''
@@ -125,19 +125,20 @@ function Home() {
                 total: 0
             }
         };
+        const shouldCallUseSWR = !!token
 
-        if (token) {
+        // if (token) {
             const fetcher = (url: string) =>
                 fetch(import.meta.env.VITE_API_URL + url, {
                     headers: { Authorization: `Bearer ${token}`, 'client-id': 2 } as any
                 }).then((res) => res.json());
-            const { data: laeData } = useSWR(`/learn-and-earn`, fetcher);
+            const { data: laeData } = useSWR(shouldCallUseSWR ? `/learn-and-earn` : null, fetcher);
 
             metrics = {
                 ...metrics,
                 ...laeData?.data
             };
-        }
+        // }
 
         return (
             <Metrics
@@ -153,7 +154,7 @@ function Home() {
         )
         .filter((el: any) => el.status === state)
         .filter((el: any) =>
-            !!categoryString ? el.category === categoryString : el
+            categoryString ? el.category === categoryString : el
         );
 
     // const TabItems: string[] = ['started', 'available', 'completed'];
@@ -220,7 +221,7 @@ function Home() {
                                 setCurrentPage(0);
                             }}
                             title={el}
-                            number={!!data ? filterLevels(el).length : 0}
+                            number={data ? filterLevels(el).length : 0}
                         />
                     ))}
                 </CategoryTabs>
@@ -274,7 +275,7 @@ function Home() {
                     mt={2}
                     nextIcon="arrowRight"
                     nextLabel={'Next'}
-                    pageCount={totalPages(!!data ? filteredData.length : 0)}
+                    pageCount={totalPages(data ? filteredData.length : 0)}
                     pb={7}
                     previousIcon="arrowLeft"
                     previousLabel={'Previous'}

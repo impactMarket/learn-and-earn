@@ -1,21 +1,9 @@
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import {
-    // Alert,
-    // Box,
-    // Display,
-    // DropdownMenu,
-    // Pagination,
-    // Tab,
-    // TabList,
-    // Tabs,
-    ViewContainer
-} from '@impact-market/ui';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Home from './components/Home/Home';
 import Header from './components/Header/Header';
 import Level from './components/Level/Level';
 
-import { useParams } from 'react-router-dom';
 
 // import { useSinglePrismicDocument, useAllPrismicDocumentsByType } from '@prismicio/react';
 import { DataProvider } from './context/DataContext';
@@ -24,26 +12,19 @@ import {
 	WagmiConfig,
 	useAccount,
 	useConnect,
-	useNetwork,
-	useWalletClient
+	// useNetwork,
+	// useWalletClient
 } from "wagmi";
-import { ImpactProvider } from "@impact-market/utils/ImpactProvider";
+// import { ImpactProvider } from "@impact-market/utils/ImpactProvider";
 import { chains, wagmiConfig } from './helpers/network';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { useEffect, useState } from 'react';
 
-
-const Test = () => {
-    const { slug, uid } = useParams();
-
-    return <div>{`Page of Lesson: ${slug} ${uid}`}</div>;
-};
-
 function Wrapper() {
     const [token, setToken] = useState('');
 	const { address, isConnected } = useAccount();
-	const { data: signer } = useWalletClient();
-	const { chain } = useNetwork();
+	// const { data: signer } = useWalletClient();
+	// const { chain } = useNetwork();
 	const { connect } = useConnect({
 		connector: new InjectedConnector({ chains }),
 	});
@@ -82,8 +63,6 @@ function Wrapper() {
                 <DataProvider token={token}>
                         <Routes>
                             <Route path="/" element={<Home />} />
-                            {/* <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/guides" element={<Guides />} /> */}
                             <Route path="/:levelId/:uid" element={<Lesson />} />
                             <Route path="/:levelId" element={<Level />} />
                         </Routes>

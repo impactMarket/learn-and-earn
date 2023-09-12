@@ -8,7 +8,7 @@ import React from 'react';
 type TextLinkProps = TLinkProps & React.LinkHTMLAttributes<HTMLLinkElement>;
 
 const TextLink = (props: TextLinkProps) => {
-    const href = !!props?.href
+    const href = props?.href
         ? props?.href?.replace('https:///', '/')
         : undefined;
     const isInternal = !!href && href?.startsWith('/');

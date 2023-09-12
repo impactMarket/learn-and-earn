@@ -22,9 +22,9 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LevelsTable = (props: any) => {
-    const { data, pageStart, pageEnd, lang, earnRewardsCopy } = props;
+    const { data, pageStart, pageEnd, earnRewardsCopy } = props;
     const { categories, setIsLoading }: any = useContext(DataContext);
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     // console.log(categories);
     // const router = useRouter();
     // const auth = useSelector(selectCurrentUser);
@@ -65,7 +65,7 @@ const LevelsTable = (props: any) => {
                     })}
             </Grid>
 
-            {!!!data && !data.length && (
+            {!data && !data.length && (
                 <Box column fLayout="center" flex w="100%" mt="2rem">
                     <CircledIcon icon="forbidden" medium />
 

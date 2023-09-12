@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { usePrismicDocumentByUID, usePrismicDocumentsByIDs } from '@prismicio/react';
 
 const Prismic = {
