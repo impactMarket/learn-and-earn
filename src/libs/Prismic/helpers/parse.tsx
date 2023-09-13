@@ -1,4 +1,3 @@
-import React from 'react';
 import baseParse, { attributesToProps } from 'html-react-parser';
 
 const parse = (str?: string, components: any = {}) =>

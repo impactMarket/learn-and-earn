@@ -9,7 +9,7 @@ interface DataContextType {
     view: any;
     categories: any;
     token: string;
-    // setIsLoading: (state: boolean) => void
+    setIsLoading: (state: boolean) => void
 }
 
 export const DataContext = createContext<DataContextType | undefined>(
@@ -34,11 +34,10 @@ export const DataProvider = ({
     }, {});
 
     useEffect(() => {
-        // Set the body's overflow style based on isLoading
         if (isLoading) {
           document.body.style.overflow = 'hidden';
         } else {
-          document.body.style.overflow = 'auto'; // Restore the default overflow value
+          document.body.style.overflow = 'auto';
         }
       }, [isLoading]);
 
@@ -65,15 +64,10 @@ export const DataProvider = ({
         ) : null;
     };
 
-    // addTest(false)
-    // setIsLoading(false)
-    // isLoading = false;
-
     return (
         <DataContext.Provider value={contextValue}>
             <ViewContainer
                 {...({} as any)}
-                // isLoading={isLoading}
                 style={{
                     minHeight: 'calc(100vh - 5.3rem)',
                     padding: '0',
@@ -82,7 +76,6 @@ export const DataProvider = ({
             >
                 <LoadingComponent />
                 {children}
-                {/* {isLoading ? 'Loading' : children} */}
             </ViewContainer>
         </DataContext.Provider>
     );

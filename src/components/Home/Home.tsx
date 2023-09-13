@@ -1,50 +1,30 @@
-import {
-    // Alert,
-    Box,
-    // Display,
-    // DropdownMenu,
-    Pagination,
-    Tab,
-    // TabList,
-    Tabs
-} from '@impact-market/ui';
-// import { Display } from '../../Theme';
+import { Box, Pagination, Tab, Tabs } from '@impact-market/ui';
 import { DataContext } from '../../context/DataContext';
-import { Dropdown, CategoryTabs, Heading, DropdownWrapper } from './Styles';
+import { CategoryTabs, Heading } from './Styles';
 import { useAllPrismicDocumentsByType } from '@prismicio/react';
 import { useContext, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Filters from '../Filters';
 import LevelsTable from './LevelsTable';
 import Metrics from './Metrics';
 import queryString from 'query-string';
-// import RichText from '../../libs/Prismic/components/RichText';
 import useLevels from '../../hooks/useLevels';
 import useSWR from 'swr';
-// import useLearnAndEarn from '../../hooks/useLearnAndEarn';
-// import { useAccount } from 'wagmi';
-
-// import { useContext } from 'react';
-// import { DataContext } from '../context/DataContext';
 
 const ITEMS_PER_PAGE = 6;
 
 function Home() {
-    
-    const { setIsLoading }: any = useContext(DataContext);
-
-    const { view, categories, token }: any = useContext(DataContext);
+    const { view, categories, token, setIsLoading }: any =
+        useContext(DataContext);
+        
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [searchParams, setSearchParams] = useSearchParams();
     // const { claimRewardForLevels } = useLearnAndEarn();
-	// const { address } = useAccount();
+    // const { address } = useAccount();
 
     const {
         'earn-rewards': earnRewards,
-        // 'heading-content': headingContent,
-        // 'heading-title': headingTitle,
         'claim-available': claimAvailable = '',
         'claim-disabled': claimDisabled = ''
-        // 'only-beneficiaries-tooltip': onlyBeneficiariesTooltip = ''
     } = view?.data ?? {
         'earn-rewards': 'Earn Rewards',
         'heading-content': '',
@@ -60,48 +40,49 @@ function Home() {
         state: stateString = 'available',
         category: categoryString = null
     } = queryParams;
-    console.log(stateString);
 
     const [currentPage, setCurrentPage] = useState(+page);
     const [search, setSearch] = useState(searchString);
     const [state, setState] = useState(stateString);
-    // const [dataLoaded, setDataLoaded] = useState(true);
-
     const pageStart = currentPage * ITEMS_PER_PAGE;
     const pageEnd = currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE;
 
-    const clearQueryString = (param: string) => {
-        const updatedSearchParams = new URLSearchParams(searchParams);
+    // const clearQueryString = (param: string) => {
+    //     const updatedSearchParams = new URLSearchParams(searchParams);
 
-        updatedSearchParams.delete(param);
+    //     updatedSearchParams.delete(param);
 
-        setSearchParams(updatedSearchParams);
-    };
+    //     setSearchParams(updatedSearchParams);
+    // };
 
     useEffect(() => {
         setCurrentPage(!searchString && !!page ? +page : 0);
         setSearch(searchString?.toString().toLowerCase() || '');
     }, [searchString]);
 
-    const categoryItems = [
-        { id: '', onClick: () => clearQueryString('category'), title: 'All Categories' },
-        ...new Set(
-            categories &&
-                Object.values(categories).map((item: any, idx: number) => {
-                    const value = Object.keys(categories)[idx];
+    // const categoryItems = [
+    //     {
+    //         id: '',
+    //         onClick: () => clearQueryString('category'),
+    //         title: 'All Categories'
+    //     },
+    //     ...new Set(
+    //         categories &&
+    //             Object.values(categories).map((item: any, idx: number) => {
+    //                 const value = Object.keys(categories)[idx];
 
-                    return {
-                        id: value,
-                        onClick: () => setSearchParams({ category: value }),
-                        title: item.title
-                    };
-                })
-        )
-    ];
+    //                 return {
+    //                     id: value,
+    //                     onClick: () => setSearchParams({ category: value }),
+    //                     title: item.title
+    //                 };
+    //             })
+    //     )
+    // ];
 
-    const selectedCategory =
-        categoryItems.find((el: any) => el.id === categoryString ?? '')
-            ?.title || 'All Categories';
+    // const selectedCategory =
+    //     categoryItems.find((el: any) => el.id === categoryString ?? '')
+    //         ?.title || 'All Categories';
 
     const totalPages = (items: number) => {
         const pages = Math.floor(items / ITEMS_PER_PAGE);
@@ -125,19 +106,25 @@ function Home() {
                 total: 0
             }
         };
-        const shouldCallUseSWR = !!token
+        const shouldCallUseSWR = !!token;
 
         // if (token) {
-            const fetcher = (url: string) =>
-                fetch(import.meta.env.VITE_API_URL + url, {
-                    headers: { Authorization: `Bearer ${token}`, 'client-id': 2 } as any
-                }).then((res) => res.json());
-            const { data: laeData } = useSWR(shouldCallUseSWR ? `/learn-and-earn` : null, fetcher);
+        const fetcher = (url: string) =>
+            fetch(import.meta.env.VITE_API_URL + url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'client-id': 2
+                } as any
+            }).then((res) => res.json());
+        const { data: laeData } = useSWR(
+            shouldCallUseSWR ? `/learn-and-earn` : null,
+            fetcher
+        );
 
-            metrics = {
-                ...metrics,
-                ...laeData?.data
-            };
+        metrics = {
+            ...metrics,
+            ...laeData?.data
+        };
         // }
 
         return (
@@ -157,8 +144,6 @@ function Home() {
             categoryString ? el.category === categoryString : el
         );
 
-    // const TabItems: string[] = ['started', 'available', 'completed'];
-
     const filterLevels = (filter: string) => {
         return data?.filter((el: any) => el.status === filter);
     };
@@ -166,13 +151,13 @@ function Home() {
     const TabItems = [];
 
     if (filterLevels('started').length) {
-        TabItems.push('started');
+        TabItems.push('Started');
     }
 
-    TabItems.push('available');
+    TabItems.push('Available');
 
     if (filterLevels('completed').length) {
-        TabItems.push('completed');
+        TabItems.push('Completed');
     }
 
     //  Handle Pagination
@@ -193,19 +178,18 @@ function Home() {
 
     useEffect(() => {
         if (filteredData.length) {
-            // debugger
             setIsLoading(false);
         }
-        
-    },[data, filteredData])
+    }, [data, filteredData]);
 
     return (
         <>
-            {/* <button onClick={() => claimRewardForLevels(address || '0x0', [0], [0], ['0x70397b16b32e191f16549f66b953d16b931169dd02ccb3dddac29e6b7dfebd5834f24770098467dcd1fbe4baaa0c0b9eb2d3157fb80a3dbc57d9bc348c6bca491b'])}>Claim</button> */}
             <Box flex style={{ justifyContent: 'space-between' }}>
                 <Box flex fDirection={'column'}>
                     <Heading>
-                        {'Earn rewards directly in MiniPay by learning about selected web3 projects'}
+                        {
+                            'Earn rewards directly in MiniPay by learning about selected web3 projects'
+                        }
                     </Heading>
                 </Box>
             </Box>
@@ -256,8 +240,6 @@ function Home() {
                         <Filters property="search" />
                     </Box>
                 </Box> */}
-
-                {/* <Alert icon="infoCircle" mb={1} title={onlyBeneficiariesTooltip} /> */}
 
                 {filteredData && categories && (
                     <LevelsTable

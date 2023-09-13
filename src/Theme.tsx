@@ -57,5 +57,4 @@ export const Badge = styled(BadgeUI)`
     background-color: ${colors.s50};
     color: ${colors.s700};
     font-family: Inter, sans-serif;
-    // position: absolute;
 `;

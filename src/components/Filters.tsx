@@ -1,8 +1,6 @@
 import { Box } from '@impact-market/ui';
 import Input from './Input';
-// import React from 'react';
-// import useFilters from '../hooks/useFilters';
-import useTranslations from '../libs/Prismic/hooks/useTranslations';
+// import useTranslations from '../libs/Prismic/hooks/useTranslations';
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -16,7 +14,7 @@ interface FilterProps {
 
 const Filters = (props: FilterProps) => {
     const { property, maxW, margin } = props;
-    const { t } = useTranslations();
+    // const { t } = useTranslations();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const onInputChange = (
@@ -37,7 +35,7 @@ const Filters = (props: FilterProps) => {
                 onKeyUp={(e: any) =>
                     onInputChange(property, e.target.value, 500)
                 }
-                placeholder={t('searchForName')}
+                // placeholder={t('searchForName')}
             />
         </Box>
     );
