@@ -4,8 +4,6 @@ import Home from './components/Home/Home';
 import Header from './components/Header/Header';
 import Level from './components/Level/Level';
 
-
-// import { useSinglePrismicDocument, useAllPrismicDocumentsByType } from '@prismicio/react';
 import { DataProvider } from './context/DataContext';
 import Lesson from './components/Lesson/Lesson';
 import {
@@ -20,6 +18,28 @@ import { chains, wagmiConfig } from './helpers/network';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { useEffect, useState } from 'react';
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics, logEvent } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_ANALYTICS_APIKEY,
+  authDomain: "learn-and-earn-opera.firebaseapp.com",
+  projectId: "learn-and-earn-opera",
+  storageBucket: "learn-and-earn-opera.appspot.com",
+  messagingSenderId: import.meta.env.VITE_ANALYTICS_SENDERID,
+  appId: import.meta.env.VITE_ANALYTICS_APPID,
+  measurementId: import.meta.env.VITE_ANALYTICS_MEASUREMENTID
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 function Wrapper() {
     const [token, setToken] = useState('');
     const { address, isConnected } = useAccount();
@@ -31,6 +51,7 @@ function Wrapper() {
 
     useEffect(() => {
         console.log({ isConnected })
+        logEvent(analytics, 'page_loaded');
         connect();
     }, []);
     useEffect(() => {

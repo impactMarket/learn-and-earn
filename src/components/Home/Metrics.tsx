@@ -1,24 +1,6 @@
-import {
-    Box,
-    // Button,
-    Card,
-    Display,
-    // Grid,
-    ProgressCard,
-    toast
-} from '@impact-market/ui';
-// import { selectCurrentUser } from '../../state/slices/auth';
-// import { useLearnAndEarn } from '@impact-market/utils/useLearnAndEarn';
-// import { useSelector } from 'react-redux';
+import { Box, Card, Display, ProgressCard, toast } from '@impact-market/ui';
 import { useState, useContext } from 'react';
-import Message from '../../libs/Prismic/components/Message';
 import RichText from '../../libs/Prismic/components/RichText';
-// import String from '../../libs/Prismic/components/String';
-// import config from '../../../config';
-// import processTransactionError from '../../utils/processTransactionError';
-// import styled from 'styled-components';
-// import useTranslations from '../../libs/Prismic/hooks/useTranslations';
-
 import { MetricsWrapper, RewardsButton } from './Styles';
 import { DataContext } from '../../context/DataContext';
 import useLearnAndEarn from '../../hooks/useLearnAndEarn';
@@ -26,21 +8,15 @@ import { useAccount } from 'wagmi';
 
 const Metrics = (props: any) => {
     const { metrics } = props;
-    console.log(metrics);
-    
     const { token }: any = useContext(DataContext);
-
     const {
         amount = false,
         levelId = false,
         signature: signatures = false
     } = metrics?.claimRewards?.[0] || {};
-
-    // const auth = useSelector(selectCurrentUser);
     const { claimRewardForLevels } = useLearnAndEarn();
     const { address } = useAccount();
     const [isLoading, setIsLoading] = useState(false);
-    // const { t } = useTranslations();
 
     const totalData = [
         { ...metrics?.level, label: 'Levels Completed' },
@@ -71,12 +47,11 @@ const Metrics = (props: any) => {
             setIsLoading(false);
             // processTransactionError(error, 'claim_lae_rewards');
             console.log(error);
-            toast.error(<Message id="errorOccurred" />);
+            toast.error('An error has occurred');
             throw Error;
         }
 
         console.log(response);
-        
 
         const { transactionHash } = response;
 

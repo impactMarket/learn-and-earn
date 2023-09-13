@@ -13,8 +13,6 @@ export default function useLevels(levels: any, token?: string) {
         fetcher
     );
 
-    // const { data: apiData, error } = useSWR(`/learn-and-earn/levels?language=en`, fetcher);
-
     const formatedResponse =
         levels &&
         (levels.reduce((next: any, current: any) => {
@@ -38,25 +36,6 @@ export default function useLevels(levels: any, token?: string) {
         }, {}) as any);
 
     let data = [];
-
-    // let data =
-    //     formatedResponse &&
-    //     Object.values(formatedResponse).map((item: any) => {
-    //         return {
-    //             ...item,
-    //             id: null,
-    //             status: 'available',
-    //             totalLessons: item?.lessons?.length,
-    //             totalReward: item?.data?.reward
-    //         };
-    //     });
-
-    // if (!token) {
-    //     return {
-    //         data,
-    //         levelsLoading: false
-    //     };
-    // }
 
     if (apiData?.success) {
         data = apiData?.data?.rows?.map((item: any) => {

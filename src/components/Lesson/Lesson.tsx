@@ -36,6 +36,7 @@ const Lesson = () => {
     const [modal] = useSinglePrismicDocument('pwa-modals');
     const [wrongModalOpen, setWrongModalOpen] = useState(false);
     const [successModalOpen, setSuccessModalOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [attempts, setAttempts] = useState(0);
     const {
         'lae-failed-lesson-description': failedDescription,
@@ -54,9 +55,7 @@ const Lesson = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const queryParams = queryString.parse(location.search);
     const { page } = queryParams;
-
     const navigate = useNavigate();
-
     const { levelId = '', uid: lessonUid = '' } = useParams();
     const prismicLesson = Prismic.getLessonByUID({ lessonUid });
 
@@ -133,12 +132,7 @@ const Lesson = () => {
 
         if (slide[0]?.type) {
             if (slide[0].type === 'image') {
-                return (
-                    <RichText
-                        content={slide}
-                        style={{ width: '100%' }}
-                    />
-                );
+                return <RichText content={slide} style={{ width: '100%' }} />;
             }
 
             return (
@@ -160,7 +154,7 @@ const Lesson = () => {
 
     const postAnswers = async () => {
         // Post answers
-        setIsLoading(true);
+        setIsSubmitting(true);
         const answers = userAnswers
             .reduce((next: any, current: any) => {
                 return [current.findIndex((el: any) => el), ...next];
@@ -182,6 +176,7 @@ const Lesson = () => {
             }
         );
         const response = await res.json();
+
         if (response?.data?.success === false) {
             setAttempts(response?.data?.attempts);
             setWrongModalOpen(true);
@@ -191,6 +186,7 @@ const Lesson = () => {
             toast.error('An error has occurred');
             console.log('error');
         }
+        setIsSubmitting(false);
     };
 
     useEffect(() => {
@@ -286,7 +282,7 @@ const Lesson = () => {
                 )}
 
                 {!isQuiz && currentPage + 1 === content.length && (
-                    <Box style={{marginTop: '1rem'}}>
+                    <Box style={{ marginTop: '1rem' }}>
                         <Button
                             disabled={!canGotoQuiz}
                             // fluid
@@ -310,6 +306,7 @@ const Lesson = () => {
                         <Button
                             disabled={!(progress.length == content.length)}
                             onClick={postAnswers}
+                            isLoading={isSubmitting}
                         >
                             {/* {t('submit')} */}
                             {'Submit'}

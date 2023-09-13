@@ -5,7 +5,7 @@ export const HeaderWrapper = styled.div`
     align-items: center;
     background-color: ${colors.n01};
     display: flex;
-    height: 2.3rem;
+    height: 4.375rem;
     justify-content: center;
     padding: 1rem;
     position: relative;

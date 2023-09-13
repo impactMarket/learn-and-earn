@@ -1,27 +1,14 @@
 import {
     Alert,
-    // Badge,
     Box,
-    // Button,
-    // Display,
     Divider,
     Icon,
-    Label,
-    // ViewContainer
+    Label
 } from '@impact-market/ui';
-// import { selectCurrentUser } from '../../../state/slices/auth';
-// import { useRouter } from 'next/router';
-// import { useSelector } from 'react-redux';
 import RichText from '../../libs/Prismic/components/RichText';
-// import String from '../../../libs/Prismic/components/String';
-// import Tooltip from '../../../components/Tooltip';
-// import config from '../../../../config';
 import useLessons from '../../hooks/useLessons';
-// import useTranslations from '../../../libs/Prismic/hooks/useTranslations';
-
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
-// import { usePrismicDocumentByUID, usePrismicDocumentsByIDs } from '@prismicio/react';
 import Prismic from '../../helpers/Prismic';
 import { extractLessonIds } from '../../helpers/Helpers';
 import { useContext, useEffect } from 'react';
@@ -40,26 +27,15 @@ const Level = () => {
     const { view, categories, token, setIsLoading }: any =
         useContext(DataContext);
 
-    // const [isLoading, setIsLoading] = useState(true);
-
     const { levelId = '' } = useParams();
     const level = Prismic.getLevelByUID({ levelId });
     const lessonIds = !!level && extractLessonIds(level);
     const lessons = Prismic.getLessonsByIDs({ lessonIds });
     const navigate = useNavigate();
-
-    // const { title, category } = level?.data;
-
-    // const view = data['view-learn-and-earn'];
-    // const { level, lessons, categories } = prismic;
-
     const { title, category } = level?.data || {};
 
-    // const { t } = useTranslations();
     const {
-        // instructions,
         'threshold-tooltip': thresholdTooltip,
-        // 'only-beneficiaries-tooltip': onlyBeneficiariesTooltip,
         'no-rewards-tooltip': noRewardsTooltip,
         'no-rewards-tooltip-title': noRewardsTooltipTitle,
         'message-pointsTotal': totalPointsLabel,
@@ -76,7 +52,6 @@ const Level = () => {
 
     const { text: tooltip } = thresholdTooltip[0];
 
-    // const auth = useSelector(selectCurrentUser);
     const {
         data: lessonsData,
         totalPoints,
@@ -104,7 +79,6 @@ const Level = () => {
             const response = await res.json();
 
             if (response?.success) {
-                // router.push(`/${lang}/learn-and-earn/${params.level}/${uid}`);
                 setIsLoading(true);
                 navigate(`/${levelId}/${uid}?page=0`);
             } else {
@@ -153,7 +127,6 @@ const Level = () => {
 
             <Box style={{ display: 'flex', justifyContent: 'center' }}>
                 <Box style={{ maxWidth: '36.25rem' }}>
-                    {/* <RichText content={instructions} g500 /> */}
                     <Text>
                         {
                             'After each tutorial you will be prompt to answer a simple quiz based on what you have learned.For every successful quiz, you will receive $PACT tokens in your Libera wallet.'
@@ -208,10 +181,6 @@ const Level = () => {
                                     </Box>
                                     <Cell>
                                         {item.status === 'started' && (
-                                            // <Tooltip
-                                            //     content={tooltip}
-                                            //     disabledTooltip={buttonDisabled}
-                                            // >
                                             <Button
                                                 fluid
                                                 disabled={
@@ -221,16 +190,13 @@ const Level = () => {
                                                             'completed') ||
                                                     completedToday
                                                 }
-                                                onClick={() =>
-                                                    {
-                                                        setIsLoading(true);
-                                                        navigate(
-                                                            `/${levelId}/${item.uid}?page=0`
-                                                        );
-                                                    }
-                                                }
+                                                onClick={() => {
+                                                    setIsLoading(true);
+                                                    navigate(
+                                                        `/${levelId}/${item.uid}?page=0`
+                                                    );
+                                                }}
                                             >
-                                                {/* <String id="continue" /> */}
                                                 {'Continue'}
                                             </Button>
                                         )}
@@ -247,7 +213,9 @@ const Level = () => {
                                                 >
                                                     <Button
                                                         fluid
-                                                        disabled={completedToday}
+                                                        disabled={
+                                                            completedToday
+                                                        }
                                                         onClick={() =>
                                                             startLesson(
                                                                 item.id,

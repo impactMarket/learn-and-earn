@@ -18,6 +18,6 @@ li {
 }
 
 /* Set box-sizing to border-box for all elements */
-/* *, *::before, *::after {
+*, *::before, *::after {
   box-sizing: border-box;
-} */
+}

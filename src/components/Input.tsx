@@ -6,7 +6,7 @@ import {
 } from '@impact-market/ui';
 import { Controller, useWatch } from 'react-hook-form';
 import React, { useEffect, useState } from 'react';
-import useTranslations from '../libs/Prismic/hooks/useTranslations';
+// import useTranslations from '../libs/Prismic/hooks/useTranslations';
 
 type InputProps = {
     control?: any;
@@ -21,7 +21,7 @@ const Input: React.FC<InputProps & BaseInputProps> = (props) => {
     const [count, setCount] = useState(0);
     const { control, label, limit, min, name, rules, ...forwardProps } = props;
 
-    const { t } = useTranslations();
+    // const { t } = useTranslations();
 
     if (control) {
         const inputWatch = useWatch({ control, name });
@@ -59,7 +59,7 @@ const Input: React.FC<InputProps & BaseInputProps> = (props) => {
                 />
                 {field && limit && (
                     <Text g500 mt={0.375} small>
-                        {limit - count} {t('charactersLeft')}
+                        {limit - count} {'characters left'}
                         {min && count < min && ` (min ${min})`}
                     </Text>
                 )}

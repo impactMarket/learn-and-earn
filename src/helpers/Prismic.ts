@@ -1,22 +1,19 @@
 /* eslint-disable */
-import { usePrismicDocumentByUID, usePrismicDocumentsByIDs } from '@prismicio/react';
+import {
+    usePrismicDocumentByUID,
+    usePrismicDocumentsByIDs
+} from '@prismicio/react';
 
 const Prismic = {
     getLessonByUID: ({
-        // clientOptions = {},
         // lang: langCode = defaultLang,
         lessonUid = ''
     }: any) => {
-        // const locale = langConfig.find(
-        //     ({ shortCode }) => shortCode === langCode
-        // )?.code;
-        // const api = await client(clientOptions);
-
         try {
-            // const response = await api.getByUID('pwa-lae-lesson', lesson, {
-            //     lang: locale
-            // });
-            const [response] = usePrismicDocumentByUID('pwa-lae-lesson',lessonUid) as any;
+            const [response] = usePrismicDocumentByUID(
+                'pwa-lae-lesson',
+                lessonUid
+            ) as any;
 
             const { alternate_languages, data, id, lang, uid } = response;
 
@@ -25,21 +22,9 @@ const Prismic = {
             return null;
         }
     },
-    getLessonsByIDs: ({
-        // lang: langCode = defaultLang,
-        lessonIds = []
-    }: any) => {
-        // const lang = langConfig.find(
-        //     ({ shortCode }) => shortCode === langCode
-        // )?.code;
-        // const lang = 'en-us';
-
-        // const api = await client(clientOptions);
-        
-
+    getLessonsByIDs: ({ lessonIds = [] }: any) => {
         try {
             const [response] = usePrismicDocumentsByIDs(lessonIds);
-            // const response = await api.getByIDs(lessonIds, { lang });
 
             const lessonsData = response?.results?.map((item: any) => {
                 const { uid, alternate_languages, lang, id } = item;
@@ -53,27 +38,13 @@ const Prismic = {
             return null;
         }
     },
-    getLevelByUID: ({
-        // clientOptions = {},
-        // lang: langCode = defaultLang,
-        levelId = ''
-    }: any) => {
-        // const lang = langConfig.find(
-        //     ({ shortCode }) => shortCode === langCode
-        // )?.code;
-
-        // const api = await client(clientOptions);
-
-        // console.log(slug);
-        // debugger
-
+    getLevelByUID: ({ levelId = '' }: any) => {
         try {
-            // const response = await api.getByUID('pwa-lae-level', level, {
-            //     lang
-            // });
-            const [response] = usePrismicDocumentByUID('pwa-lae-level', levelId) as any;
-            // console.log(response);
-            
+            const [response] = usePrismicDocumentByUID(
+                'pwa-lae-level',
+                levelId
+            ) as any;
+
             const {
                 alternate_languages,
                 data,
@@ -99,6 +70,6 @@ const Prismic = {
             return null;
         }
     }
-}
+};
 
-export default Prismic
+export default Prismic;
