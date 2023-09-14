@@ -3,7 +3,8 @@ import {
     Display as DisplayUI,
     Box,
     Text as TextUI,
-    Badge as BadgeUI
+    Badge as BadgeUI,
+    ViewContainer as ViewConatinerUI
 } from '@impact-market/ui';
 import { colors } from '@impact-market/ui';
 import styled from 'styled-components';
@@ -57,4 +58,8 @@ export const Badge = styled(BadgeUI)`
     background-color: ${colors.s50};
     color: ${colors.s700};
     font-family: Inter, sans-serif;
+`;
+
+export const ViewContainer = styled(ViewConatinerUI)`
+    background-color: ${colors.g100};
 `;
