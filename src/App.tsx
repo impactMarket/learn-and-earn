@@ -59,9 +59,8 @@ function Wrapper() {
         if (address) {
             const requestOptions = {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", 'client-id': 2 } as any,
                 body: JSON.stringify({ address }),
-                'client-id': 2,
             };
             fetch(
 				import.meta.env.VITE_API_URL + "/users",
