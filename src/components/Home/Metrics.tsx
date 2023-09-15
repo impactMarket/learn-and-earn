@@ -1,4 +1,4 @@
-import { Box, Card, Display, ProgressCard, toast } from '@impact-market/ui';
+import { Box, Card, Display, ProgressCard, colors, toast } from '@impact-market/ui';
 import { useState, useContext } from 'react';
 import RichText from '../../libs/Prismic/components/RichText';
 import { MetricsWrapper, RewardsButton } from './Styles';
@@ -51,8 +51,6 @@ const Metrics = (props: any) => {
             throw Error;
         }
 
-        console.log(response);
-
         const { transactionHash } = response;
 
         await fetch(`${import.meta.env.VITE_API_URL}/learn-and-earn/levels`, {
@@ -81,11 +79,11 @@ const Metrics = (props: any) => {
                     style={{ flex: '1' }}
                     className="stats"
                 >
-                    <Display semibold>
+                    <Display>
                         {`${item?.completed ?? item?.received} `}
                         <span
                             style={{
-                                fontWeight: 400
+                                fontWeight: 600
                             }}
                         >
                             {'of'}
@@ -107,11 +105,7 @@ const Metrics = (props: any) => {
                         }}
                     >
                         <RichText
-                            center
-                            g500
-                            medium
-                            small
-                            mb="1rem"
+                            style={{color: `${colors.g500}`}}
                             content={
                                 hasRewards
                                     ? props.copy.success

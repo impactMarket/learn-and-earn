@@ -145,7 +145,7 @@ function Home() {
         );
 
     const filterLevels = (filter: string) => {
-        return data?.filter((el: any) => el.status === filter);
+        return data?.filter((el: any) => el.status === filter.toLocaleLowerCase());
     };
 
     const TabItems = [];
@@ -195,7 +195,7 @@ function Home() {
             </Box>
             {<Progress />}
             <Tabs defaultIndex={0}>
-                <CategoryTabs>
+                <CategoryTabs style={{marginTop: '1rem'}}>
                     {TabItems.map((el: string, idx: number) => (
                         <Tab
                             key={idx}

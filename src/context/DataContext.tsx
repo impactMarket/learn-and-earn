@@ -3,7 +3,8 @@ import {
     useSinglePrismicDocument,
     useAllPrismicDocumentsByType
 } from '@prismicio/react';
-import { ViewContainer, Spinner } from '@impact-market/ui';
+import { Spinner } from '@impact-market/ui';
+import { ViewContainer } from '../Theme';
 
 interface DataContextType {
     view: any;

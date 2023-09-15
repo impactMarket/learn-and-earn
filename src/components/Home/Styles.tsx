@@ -127,19 +127,35 @@ export const MetricsWrapper = styled(Box)`
         .stats {
             padding: 0.5rem;
 
-            > div > div:first-of-type {
-                display: flex;
-                height: 3rem;
-                justify-content: center;
-                width: auto;
+            svg {
+                padding-left: .5rem;
+            }
 
-                > svg {
-                    height: 100%;
+            > div > div {
+                &:first-of-type {
+                    display: flex;
+                    height: 3rem;
+                    justify-content: center;
+                    width: auto;
+    
+                    > svg {
+                        height: 100%;
+                    }
                 }
+    
+                &:last-of-type {
+                    padding-left: 1rem;
+                }
+
+                > div:first-of-type {
+                    color: ${colors.g500}
+                }
+
             }
 
             h1 {
                 font-size: 1.2rem;
+                font-weight: 600;
             }
         }
     }
