@@ -1,11 +1,13 @@
 /* CSS reset */
-html, body, div, h1, h2, h3, p, ul, li {
+html, body, div, h1, h2, h3, p, li {
   margin: 0;
   padding: 0;
 }
 
-li {
-  list-style: none;
+ul, ol {
+  margin: 0;
+  padding-left: 2rem;
+  white-space: pre-line;
 }
 
 .navPages {
@@ -15,6 +17,32 @@ li {
 .sub-item {
   font-size: .75rem;
   color: #667085;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-right {
+  text-align: right;
+}
+
+ul.pagesContainer li {
+  list-style-type: none;
+}
+
+table td {
+  padding: 1rem;
+}
+
+pre {
+  position: relative;
+}
+
+pre img {
+  max-width: 100%;
+  height: auto;
+  width: auto;
 }
 
 /* Set box-sizing to border-box for all elements */

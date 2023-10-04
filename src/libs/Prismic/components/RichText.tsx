@@ -14,7 +14,6 @@ type SerializerOptions = {
 
 type SerializerFunction = (...args: any | any[]) => any;
 
- 
 const serializer: SerializerFunction = ({
     // children,
     // key,
@@ -40,6 +39,20 @@ const serializer: SerializerFunction = ({
     //         </TextLink>
     //     );
     // }
+
+    if (type === 'preformatted') {
+        const { text } = node;
+
+        return (
+            <Box>
+                <pre>
+                    <Text as="div" {...forwardProps}>
+                        {parse(text)}
+                    </Text>
+                </pre>
+            </Box>
+        );
+    }
 
     // TODO use UI Image comp
     if (type === 'image') {
@@ -153,7 +166,6 @@ const RichText = (props: RichTextProps) => {
         <Text as="div" {...forwardProps}>
             {/* TODO use UI RichContent comp to wrap this */}
             <PrismicRichText
-                 
                 components={(type, node, content, children, key) =>
                     serializer({
                         children,
