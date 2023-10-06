@@ -8,3 +8,11 @@ html, body, div, h1, h2, h3, p, ul, li {
 *, *::before, *::after {
   box-sizing: border-box;
 }
+
+ul li {
+  list-style-type: circle;
+}
+
+ol li {
+  list-style-type: upper-roman;
+}

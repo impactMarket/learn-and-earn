@@ -93,11 +93,10 @@ const Lesson = () => {
 
     const canGotoQuiz = progress.length === content.length;
 
-    const slide =
-        content[currentPage]?.slice_type === 'video_section'
-            ? content[currentPage] ?? {}
-            : content[currentPage]?.primary?.content ?? {};
-
+    const slide = prismicLesson
+        ? content[currentPage]?.primary?.content ??
+          content[currentPage]?.primary?.html
+        : {};
     const currentQuestion = questions[currentPage];
 
     //  Handle Pagination
