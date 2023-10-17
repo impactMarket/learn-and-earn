@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Home from './components/Home/Home';
-import Header from './components/Header/Header';
 import Level from './components/Level/Level';
 
 import { DataProvider } from './context/DataContext';
@@ -79,7 +78,6 @@ function Wrapper() {
         // 	networkId={chain?.id || 42220}
         // >
         <BrowserRouter>
-            <Header />
             <DataProvider token={token}>
                 <Routes>
                     <Route path="/" element={<Home />} />

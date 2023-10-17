@@ -100,7 +100,7 @@ const Level = () => {
     return (
         <>
             <BackButton as="a" onClick={() => navigate(`/`)}>
-                <Label content={'Back'} icon="arrowLeft" />
+                <Label content={'Courses'} icon="arrowLeft" />
             </BackButton>
 
             {!rewardAvailable && (

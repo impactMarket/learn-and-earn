@@ -43,6 +43,10 @@ export const BackButton = styled(Box)`
         border-radius: .5rem;
         padding: .5rem .75rem;
         margin-bottom: 1.5rem;
+
+        > p {
+            margin-left: .5rem;
+        }
     }
 `;
 

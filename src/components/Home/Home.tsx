@@ -35,7 +35,7 @@ function Home() {
     const { data } = useLevels(levels, token);
     const queryParams = queryString.parse(location.search);
     const {
-        page = 0,
+        page = '0',
         search: searchString = '',
         state: stateString = 'available',
         category: categoryString = null

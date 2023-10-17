@@ -49,3 +49,7 @@ pre img {
 *, *::before, *::after {
   box-sizing: border-box;
 }
+
+.white-container {
+  background-color: white !important;
+}
