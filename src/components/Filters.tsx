@@ -1,10 +1,9 @@
 import { Box } from '@impact-market/ui';
 import Input from './Input';
-// import useTranslations from '../libs/Prismic/hooks/useTranslations';
 
 import { useSearchParams } from 'react-router-dom';
 
-let timeoutFilter: ReturnType<typeof setTimeout> = null;
+let timeoutFilter = setTimeout(() => {}, 0);
 
 interface FilterProps {
     property: string;
@@ -14,7 +13,6 @@ interface FilterProps {
 
 const Filters = (props: FilterProps) => {
     const { property, maxW, margin } = props;
-    // const { t } = useTranslations();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const onInputChange = (

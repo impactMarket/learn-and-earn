@@ -159,6 +159,10 @@ export const MetricsWrapper = styled(Box)`
             }
         }
     }
+
+    @media (max-width: ${breakpoints.xsmall}) {
+        flex-direction: column;
+    }
 `;
 
 export const Heading = styled(Display)`

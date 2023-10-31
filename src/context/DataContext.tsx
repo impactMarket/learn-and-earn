@@ -5,12 +5,14 @@ import {
 } from '@prismicio/react';
 import { Spinner } from '@impact-market/ui';
 import { ViewContainer } from '../Theme';
+import { useLocation } from 'react-router-dom';
+import Header from '../components/Header/Header';
 
 interface DataContextType {
     view: any;
     categories: any;
     token: string;
-    setIsLoading: (state: boolean) => void
+    setIsLoading: (state: boolean) => void;
 }
 
 export const DataContext = createContext<DataContextType | undefined>(
@@ -34,13 +36,16 @@ export const DataProvider = ({
         return { ...next, [id]: { alternate_languages, lang, title } };
     }, {});
 
+    const location = useLocation();
+    const currentRoute = location.pathname;
+
     useEffect(() => {
         if (isLoading) {
-          document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
         } else {
-          document.body.style.overflow = 'auto';
+            document.body.style.overflow = 'auto';
         }
-      }, [isLoading]);
+    }, [isLoading]);
 
     const contextValue = { categories, view, token, setIsLoading };
 
@@ -67,10 +72,12 @@ export const DataProvider = ({
 
     return (
         <DataContext.Provider value={contextValue}>
+            {currentRoute === '/' && <Header />}
             <ViewContainer
                 {...({} as any)}
+                className={currentRoute !== '/' && 'white-container'}
                 style={{
-                    minHeight: 'calc(100vh - 5.3rem)',
+                    minHeight: 'calc100vh',
                     padding: '0',
                     overflow: isLoading ? 'hidden' : ''
                 }}

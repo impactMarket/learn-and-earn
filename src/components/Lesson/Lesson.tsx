@@ -7,11 +7,11 @@ import {
     Divider,
     Label,
     OptionItem,
-    Pagination,
     Text,
     colors,
     toast
 } from '@impact-market/ui';
+import { breakpoints } from '../Breakpoints';
 import { Button, BackButton } from '../../Theme';
 import { DataContext } from '../../context/DataContext';
 import { useContext } from 'react';
@@ -19,6 +19,7 @@ import { useLocation } from 'react-router-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSinglePrismicDocument } from '@prismicio/react';
 import { useState, useEffect } from 'react';
+import EnhancedPagination from '../../libs/Prismic/components/Pagination';
 import Modal from '../../modals/Modal';
 import Prismic from '../../helpers/Prismic';
 import queryString from 'query-string';
@@ -37,6 +38,7 @@ const Lesson = () => {
     const [wrongModalOpen, setWrongModalOpen] = useState(false);
     const [successModalOpen, setSuccessModalOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [desktopLayout, setDesktopLayout] = useState(false);
     const [attempts, setAttempts] = useState(0);
     const {
         'lae-failed-lesson-description': failedDescription,
@@ -194,6 +196,24 @@ const Lesson = () => {
         }
     }, [view, slide]);
 
+    useEffect(() => {
+        const checkWindowSize = () => {
+            if (window.innerWidth >= +breakpoints.medium) {
+                setDesktopLayout(true);
+            } else {
+                setDesktopLayout(false);
+            }
+        };
+
+        window.addEventListener('resize', checkWindowSize);
+
+        checkWindowSize();
+
+        return () => {
+            window.removeEventListener('resize', checkWindowSize);
+        };
+    }, []);
+
     const attemptsNumber = attempts <= 3 ? (3 - attempts).toString() : '0';
 
     return (
@@ -208,7 +228,7 @@ const Lesson = () => {
                         navigate(`/${levelId}`);
                     }}
                 >
-                    <Label content={'Back'} icon="arrowLeft" mb="1rem" />
+                    <Label content={'Lessons'} icon="arrowLeft" mb="1rem" />
                 </BackButton>
             )}
             <Display g900 mb=".25rem">
@@ -229,7 +249,8 @@ const Lesson = () => {
                     alignItems: 'center',
                     position: 'relative',
                     flexDirection: 'column',
-                    flex: 1
+                    flex: 1,
+                    paddingBottom: '3.5rem'
                 }}
             >
                 {!isQuiz ? (
@@ -280,19 +301,19 @@ const Lesson = () => {
                     </Box>
                 )}
 
-                {!isQuiz && currentPage + 1 === content.length && (
-                    <Box style={{ marginTop: '1rem' }}>
-                        <Button
-                            disabled={!canGotoQuiz}
-                            // fluid
-                            secondary
-                            // xl
-                            onClick={() => toggleQuiz(true)}
-                        >
-                            <RichText content={startQuiz} />
-                        </Button>
-                    </Box>
-                )}
+                {!isQuiz &&
+                    currentPage + 1 === content.length &&
+                    desktopLayout && (
+                        <Box style={{ marginTop: '1rem' }}>
+                            <Button
+                                disabled={!canGotoQuiz}
+                                secondary
+                                onClick={() => toggleQuiz(true)}
+                            >
+                                <RichText content={startQuiz} />
+                            </Button>
+                        </Box>
+                    )}
 
                 {!canGotoQuiz && currentPage + 1 === content.length && (
                     <Text pt="1rem" g500 small>
@@ -300,7 +321,7 @@ const Lesson = () => {
                     </Text>
                 )}
 
-                {isQuiz && currentPage + 1 === QUIZ_LENGTH && (
+                {isQuiz && currentPage + 1 === QUIZ_LENGTH && desktopLayout && (
                     <Box mt="1rem">
                         <Button
                             disabled={!(progress.length == content.length)}
@@ -394,17 +415,15 @@ const Lesson = () => {
                 <Box style={{ width: '100%' }}>
                     <Divider />
                     <Box>
-                        <Pagination
+                        <EnhancedPagination
                             currentPage={currentPage}
                             handlePageClick={handlePageClick}
-                            mt={2}
-                            mobileText
-                            nextIcon="arrowRight"
-                            nextLabel={'next'}
                             pageCount={isQuiz ? QUIZ_LENGTH : content.length}
-                            pb={2}
-                            previousIcon="arrowLeft"
-                            previousLabel={'previous'}
+                            goToQuiz={toggleQuiz}
+                            isQuiz={isQuiz}
+                            canGotoQuiz={canGotoQuiz}
+                            postAnswers={postAnswers}
+                            isLoading={isSubmitting}
                         />
                     </Box>
                 </Box>
