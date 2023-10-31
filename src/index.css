@@ -53,3 +53,10 @@ pre img {
 .white-container {
   background-color: white !important;
 }
+
+@font-face {
+  font-family: 'Abhaya Libre';
+  src: url('https://fonts.cdnfonts.com/s/16309/AbhayaLibre-ExtraBold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+}

@@ -1,20 +1,16 @@
-import {
-    Alert,
-    Box,
-    Divider,
-    Icon,
-    Label
-} from '@impact-market/ui';
-import RichText from '../../libs/Prismic/components/RichText';
-import useLessons from '../../hooks/useLessons';
-import styled from 'styled-components';
-import { useParams, useNavigate } from 'react-router-dom';
-import Prismic from '../../helpers/Prismic';
+import { Alert, Box, Divider, Icon, Label } from '@impact-market/ui';
+import { Badge, Button, BackButton, Display, Text } from '../../Theme';
+import { cardData } from './CertificateData';
+import { DataContext } from '../../context/DataContext';
 import { extractLessonIds } from '../../helpers/Helpers';
 import { useContext, useEffect } from 'react';
-import { DataContext } from '../../context/DataContext';
-import { Badge, Button, BackButton, Display, Text } from '../../Theme';
+import { useParams, useNavigate } from 'react-router-dom';
+import GenerateCertificate from '../Common/GenerateCertificate';
+import Prismic from '../../helpers/Prismic';
+import RichText from '../../libs/Prismic/components/RichText';
+import styled from 'styled-components';
 import Tooltip from '../Tooltip';
+import useLessons from '../../hooks/useLessons';
 
 const Cell = styled(Box)`
     display: flex;
@@ -32,7 +28,7 @@ const Level = () => {
     const lessonIds = !!level && extractLessonIds(level);
     const lessons = Prismic.getLessonsByIDs({ lessonIds });
     const navigate = useNavigate();
-    const { title, category } = level?.data || {};
+    const { title, category, sponsor } = level?.data || {};
 
     const {
         'threshold-tooltip': thresholdTooltip,
@@ -58,6 +54,13 @@ const Level = () => {
         completedToday,
         rewardAvailable = true
     } = useLessons(lessons, level?.id, token);
+
+    const certificateDetails = !!lessonsData && {
+        ...cardData,
+        title,
+        sponsor: sponsor?.url,
+        completionDate: lessonsData[lessonsData?.length - 1]?.completionDate
+    };
 
     const startLesson = async (lessonId: number, uid: string) => {
         try {
@@ -144,6 +147,10 @@ const Level = () => {
                             'After 3 attempts to answer a quiz and the result is still wrong, you will not be able to earn rewards but will still be able to learn.'
                         }
                     </Text>
+
+                    {!!certificateDetails?.completionDate && (
+                        <GenerateCertificate {...certificateDetails} />
+                    )}
 
                     <Box margin="1rem 0">
                         <Text g500 noMargin>

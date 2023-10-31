@@ -6,7 +6,7 @@ import {
     DropdownMenu,
     TabList
 } from '@impact-market/ui';
-import { breakpoints } from '../Breakpoints';
+import { Breakpoints } from '../Breakpoints';
 import { Button } from '../../Theme';
 import { colors } from '@impact-market/ui';
 
@@ -43,7 +43,7 @@ export const ClickableCard = styled(ComposedCard)`
         flex: 1;
     }
 
-    @media (max-width: ${breakpoints.large}) {
+    @media (max-width: ${Breakpoints.large}) {
         flex-basis: 100%;
     }
 `;
@@ -55,7 +55,7 @@ export const Grid = styled.div`
     gap: 2%;
     justify-content: flex-start;
 
-    @media (max-width: ${breakpoints.medium}) {
+    @media (max-width: ${Breakpoints.medium}) {
         flex-direction: column;
     }
 `;
@@ -81,7 +81,7 @@ export const Dropdown = styled(DropdownMenu)`
         }
     }
 
-    @media (max-width: ${breakpoints.small}) {
+    @media (max-width: ${Breakpoints.small}) {
         width: 99% !important;
     }
 `;
@@ -113,7 +113,7 @@ export const MetricsWrapper = styled(Box)`
     gap: 1rem;
     justify-content: space-between;
 
-    @media (max-width: ${breakpoints.large}) {
+    @media (max-width: ${Breakpoints.large}) {
         .stats {
             flex-basis: 46%;
         }
@@ -123,7 +123,7 @@ export const MetricsWrapper = styled(Box)`
         }
     }
 
-    @media (max-width: ${breakpoints.small}) {
+    @media (max-width: ${Breakpoints.small}) {
         .stats {
             padding: 0.5rem;
 
@@ -160,7 +160,7 @@ export const MetricsWrapper = styled(Box)`
         }
     }
 
-    @media (max-width: ${breakpoints.xsmall}) {
+    @media (max-width: ${Breakpoints.xxsmall}) {
         flex-direction: column;
     }
 `;
@@ -173,14 +173,14 @@ export const Heading = styled(Display)`
     margin-bottom: 1rem;
     text-align: center;
 
-    @media (max-width: ${breakpoints.small}) {
+    @media (max-width: ${Breakpoints.small}) {
         font-size: 1.1rem;
         line-height: 28px;
     }
 `;
 
 export const DropdownWrapper = styled(Box)`
-    @media (max-width: ${breakpoints.small}) {
+    @media (max-width: ${Breakpoints.small}) {
         width: 100%;
         margin-bottom: 1rem;
     }
