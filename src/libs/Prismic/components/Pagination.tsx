@@ -1,6 +1,5 @@
-// import React from 'react';
 import { Box, Button, Pagination, Text } from '@impact-market/ui';
-import { Breakpoints } from '../../../components/Breakpoints';
+import { Breakpoints } from '../../../../learn-and-earn-submodule/helpers/Breakpoints';
 import { colors } from '@impact-market/ui';
 import styled from 'styled-components';
 

@@ -7,7 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import LevelsTable from './LevelsTable';
 import Metrics from './Metrics';
 import queryString from 'query-string';
-import useLevels from '../../hooks/useLevels';
+import useLevels from '../../../learn-and-earn-submodule/hooks/useLevels';
 import useSWR from 'swr';
 
 const ITEMS_PER_PAGE = 6;
@@ -15,7 +15,6 @@ const ITEMS_PER_PAGE = 6;
 function Home() {
     const { view, categories, token, setIsLoading }: any =
         useContext(DataContext);
-        
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [searchParams, setSearchParams] = useSearchParams();
     // const { claimRewardForLevels } = useLearnAndEarn();
@@ -32,7 +31,14 @@ function Home() {
     };
 
     const [levels] = useAllPrismicDocumentsByType('pwa-lae-level');
-    const { data } = useLevels(levels, token);
+    const { data } = useLevels(
+        levels,
+        'en',
+        import.meta.env.VITE_CLIENTID,
+        import.meta.env.VITE_API_URL,
+        token,
+        import.meta.env.VITE_TESTNET
+    );
     const queryParams = queryString.parse(location.search);
     const {
         page = '0',
@@ -108,7 +114,6 @@ function Home() {
         };
         const shouldCallUseSWR = !!token;
 
-        // if (token) {
         const fetcher = (url: string) =>
             fetch(import.meta.env.VITE_API_URL + url, {
                 headers: {
@@ -125,7 +130,6 @@ function Home() {
             ...metrics,
             ...laeData?.data
         };
-        // }
 
         return (
             <Metrics
@@ -145,7 +149,9 @@ function Home() {
         );
 
     const filterLevels = (filter: string) => {
-        return data?.filter((el: any) => el.status === filter.toLocaleLowerCase());
+        return data?.filter(
+            (el: any) => el.status === filter.toLocaleLowerCase()
+        );
     };
 
     const TabItems = [];
@@ -195,7 +201,7 @@ function Home() {
             </Box>
             {<Progress />}
             <Tabs defaultIndex={0}>
-                <CategoryTabs style={{marginTop: '1rem'}}>
+                <CategoryTabs style={{ marginTop: '1rem' }}>
                     {TabItems.map((el: string, idx: number) => (
                         <Tab
                             key={idx}
