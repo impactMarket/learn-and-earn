@@ -1,5 +1,6 @@
-export const breakpoints = {
-  xsmall: "374px",
+export const Breakpoints = {
+  xxsmall: "374px",
+  xsmall: "435px",
   small: "576px",
   medium: "768px",
   large: "992px",

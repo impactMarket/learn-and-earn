@@ -1,6 +1,6 @@
 import { Box } from '@impact-market/ui';
 
-const Modal = ({ isOpen, children }: any) => {
+const Modal = ({ isOpen, fullW, children }: any) => {
     if (!isOpen) {
         return null;
     }
@@ -29,7 +29,7 @@ const Modal = ({ isOpen, children }: any) => {
             <Box
                 style={{
                     width: '100%',
-                    maxWidth: '21rem',
+                    maxWidth: fullW ? '100%': '21rem',
                     padding: '1.5rem',
                     border: '1px solid',
                     borderRadius: '12px',

@@ -11,7 +11,7 @@ import {
     colors,
     toast
 } from '@impact-market/ui';
-import { breakpoints } from '../Breakpoints';
+import { Breakpoints } from '../Breakpoints';
 import { Button, BackButton } from '../../Theme';
 import { DataContext } from '../../context/DataContext';
 import { useContext } from 'react';
@@ -19,7 +19,7 @@ import { useLocation } from 'react-router-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSinglePrismicDocument } from '@prismicio/react';
 import { useState, useEffect } from 'react';
-import EnhancedPagination from '../../libs/Prismic/components/Pagination';
+import EnhancedPagination from '../Common/EnhancedPagination';
 import Modal from '../../modals/Modal';
 import Prismic from '../../helpers/Prismic';
 import queryString from 'query-string';
@@ -198,7 +198,7 @@ const Lesson = () => {
 
     useEffect(() => {
         const checkWindowSize = () => {
-            if (window.innerWidth >= +breakpoints.medium) {
+            if (window.innerWidth >= +Breakpoints.medium.slice(0, -2)) {
                 setDesktopLayout(true);
             } else {
                 setDesktopLayout(false);

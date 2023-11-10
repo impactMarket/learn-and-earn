@@ -77,7 +77,7 @@ export const DataProvider = ({
                 {...({} as any)}
                 className={currentRoute !== '/' && 'white-container'}
                 style={{
-                    minHeight: 'calc100vh',
+                    minHeight: 'calc(100vh - 4.375rem)',
                     padding: '0',
                     overflow: isLoading ? 'hidden' : ''
                 }}

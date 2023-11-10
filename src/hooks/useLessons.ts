@@ -12,6 +12,7 @@ export default function useLessons(lessons: any, levelId: any, token?: string) {
         {
             data: {
                 completedToday: boolean;
+                completionDate: string;
                 lessons: any[];
                 rewardAvailable: boolean;
                 totalPoints: number;
@@ -37,7 +38,7 @@ export default function useLessons(lessons: any, levelId: any, token?: string) {
             );
 
             if ([...ids, el.id].find((it) => it === item.prismicId)) {
-                return { ...el, backendId: item.id, status: item.status };
+                return { ...el, backendId: item.id, status: item.status, completionDate: item.completionDate };
             }
         });
 
