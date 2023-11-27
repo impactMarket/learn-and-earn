@@ -1,10 +1,18 @@
-import { Box, Card, Display, ProgressCard, colors, toast } from '@impact-market/ui';
-import { useState, useContext } from 'react';
-import RichText from '../../libs/Prismic/components/RichText';
-import { MetricsWrapper, RewardsButton } from './Styles';
+import {
+    Box,
+    Card,
+    Display,
+    ProgressCard,
+    colors,
+    toast
+} from '@impact-market/ui';
 import { DataContext } from '../../context/DataContext';
-import useLearnAndEarn from '../../hooks/useLearnAndEarn';
+import { MetricsWrapper, RewardsButton } from './Styles';
 import { useAccount } from 'wagmi';
+import { useState, useContext } from 'react';
+import processTransactionError from '../../utils/processTransactionError';
+import RichText from '../../libs/Prismic/components/RichText';
+import useLearnAndEarn from '../../hooks/useLearnAndEarn';
 
 const Metrics = (props: any) => {
     const { metrics } = props;
@@ -37,15 +45,15 @@ const Metrics = (props: any) => {
         } = metricsClaimRewards?.[0] || {};
 
         try {
-            response = await claimRewardForLevels(
+            response = (await claimRewardForLevels(
                 address || '0x0',
                 [levelId],
                 [parseInt(amount)],
                 [signatures]
-            );
+            )) as any;
         } catch (error) {
             setIsLoading(false);
-            // processTransactionError(error, 'claim_lae_rewards');
+            processTransactionError(error, 'claim_lae_rewards');
             console.log(error);
             toast.error('An error has occurred');
             throw Error;
@@ -73,6 +81,7 @@ const Metrics = (props: any) => {
         <MetricsWrapper>
             {totalData.map((item) => (
                 <ProgressCard
+                    key={item.label}
                     label={item.label}
                     progress={(item?.completed / item?.total) * 100}
                     pathColor="p600"
@@ -105,7 +114,7 @@ const Metrics = (props: any) => {
                         }}
                     >
                         <RichText
-                            style={{color: `${colors.g500}`}}
+                            style={{ color: `${colors.g500}` }}
                             content={
                                 hasRewards
                                     ? props.copy.success

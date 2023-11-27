@@ -43,9 +43,9 @@ const LevelsTable = (props: any) => {
 
             {!data && !data.length && (
                 <Box column fLayout="center" flex w="100%" mt="2rem">
-                    <CircledIcon icon="forbidden" medium />
+                    <CircledIcon icon="forbidden" />
 
-                    <Text g500 medium mt={1}>
+                    <Text mt={1}>
                         {/* <String id="noRecordsFounds" /> */}
                         {'No records found'}
                     </Text>
