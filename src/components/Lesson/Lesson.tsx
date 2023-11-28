@@ -24,6 +24,7 @@ import Modal from '../../modals/Modal';
 import Prismic from '../../helpers/Prismic';
 import queryString from 'query-string';
 import RichText from '../../libs/Prismic/components/RichText';
+import processTransactionError from '../../utils/processTransactionError';
 
 const initialAnswers = [
     [false, false, false],
@@ -161,32 +162,44 @@ const Lesson = () => {
                 return [current.findIndex((el: any) => el), ...next];
             }, [])
             .reverse();
-        const res = await fetch(
-            `${import.meta.env.VITE_API_URL}/learn-and-earn/lessons`,
-            {
-                body: JSON.stringify({
-                    answers,
-                    lesson: id
-                }),
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                method: 'PUT'
-            }
-        );
-        const response = await res.json();
 
-        if (response?.data?.success === false) {
-            setAttempts(response?.data?.attempts);
-            setWrongModalOpen(true);
-        } else if (response?.data?.success) {
-            setSuccessModalOpen(true);
-        } else {
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_API_URL}/learn-and-earn/lessons`,
+                {
+                    body: JSON.stringify({
+                        answers,
+                        lesson: id
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'PUT'
+                }
+            );
+            const response = await res.json();
+
+            if (response?.data?.success === false) {
+                setAttempts(response?.data?.attempts);
+                setWrongModalOpen(true);
+            } else if (response?.data?.success) {
+                setSuccessModalOpen(true);
+            } else {
+                toast.error('An error has occurred');
+                processTransactionError(
+                    response?.error?.message,
+                    'post_answers'
+                );
+                console.log('error');
+            }
+        } catch (error) {
             toast.error('An error has occurred');
+            processTransactionError(error, 'post_answers');
             console.log('error');
         }
+
         setIsSubmitting(false);
     };
 
@@ -231,15 +244,13 @@ const Lesson = () => {
                     <Label content={'Lessons'} icon="arrowLeft" mb="1rem" />
                 </BackButton>
             )}
-            <Display g900 mb=".25rem">
-                {prismicLesson?.title}
-            </Display>
+            <Display mb=".25rem">{prismicLesson?.title}</Display>
 
             <Box style={{ display: 'flex' }}>
-                <RichText content={readTime} g500 small />
-                <RichText content={` - ${sponsored} `} g500 small />
+                <RichText content={readTime} small />
+                <RichText content={` - ${sponsored} `} small />
 
-                <RichText content={sponsor} g500 small />
+                <RichText content={sponsor} small />
             </Box>
 
             <Divider />
@@ -268,8 +279,6 @@ const Lesson = () => {
                     >
                         <RichText
                             content={currentQuestion.primary.question[0].text}
-                            g900
-                            medium
                             pb="1rem"
                         />
 
@@ -316,7 +325,7 @@ const Lesson = () => {
                     )}
 
                 {!canGotoQuiz && currentPage + 1 === content.length && (
-                    <Text pt="1rem" g500 small>
+                    <Text pt="1rem" small>
                         <RichText content={completeContent} />
                     </Text>
                 )}
@@ -353,8 +362,6 @@ const Lesson = () => {
                     <Box style={{ marginTop: '1.25rem', marginBottom: '2rem' }}>
                         <RichText
                             content={failedDescription}
-                            medium
-                            g500
                             variables={{ attempts: attemptsNumber }}
                         />
                     </Box>
@@ -393,7 +400,7 @@ const Lesson = () => {
                         <RichText content={succesTitle} large g900 />
                     </Box>
                     <Box style={{ marginTop: '1.25rem', marginBottom: '2rem' }}>
-                        <RichText content={successDescription} medium g500 />
+                        <RichText content={successDescription} medium />
                     </Box>
                     <Button
                         fluid

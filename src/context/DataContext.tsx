@@ -65,7 +65,7 @@ export const DataProvider = ({
                     alignItems: 'center'
                 }}
             >
-                <Spinner g400 isActive />
+                <Spinner isActive />
             </div>
         ) : null;
     };

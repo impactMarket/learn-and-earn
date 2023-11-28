@@ -123,7 +123,6 @@ const Level = () => {
                 <RichText
                     className="sub-item"
                     content={categories[category?.id]?.title}
-                    g500
                 />
             )}
             <Divider />
@@ -153,13 +152,11 @@ const Level = () => {
                     )}
 
                     <Box margin="1rem 0">
-                        <Text g500 noMargin>
+                        <Text noMargin>
                             <RichText content={totalPointsLabel} small />
                         </Text>
 
-                        <Display main medium>
-                            {totalPoints}
-                        </Display>
+                        <Display main>{totalPoints}</Display>
                     </Box>
 
                     <Divider mt="2rem" />
@@ -177,13 +174,11 @@ const Level = () => {
                                     <Box style={{ flexGrow: '1' }}>
                                         <RichText
                                             content={item.title.split(' -')[0]}
-                                            g500
                                             bold
                                         />
 
                                         <RichText
                                             content={item.title.split('- ')[1]}
-                                            g500
                                         />
                                     </Box>
                                     <Cell>
