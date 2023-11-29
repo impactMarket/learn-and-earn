@@ -32,7 +32,7 @@ const learnAndEarnABI = [
 ];
 
 export default function useLearnAndEarn() {
-    const { isLoading, isSuccess, write } = useContractWrite({
+    const { isLoading, isSuccess, writeAsync } = useContractWrite({
         address:
             import.meta.env.VITE_TESTNET === 'true'
                 ? '0x959eFf854990948B5F5d46986cd8C5B906741114'
@@ -44,9 +44,9 @@ export default function useLearnAndEarn() {
     const claimRewardForLevels = (
         beneficiary: string,
         levelIds: number[],
-        rewardAmounts: number[],
+        rewardAmounts: string[],
         signatures: string[]
-    ) => write!({ args: [beneficiary, levelIds, rewardAmounts, signatures] });
+    ) => writeAsync!({ args: [beneficiary, levelIds, rewardAmounts, signatures] });
 
     return { isLoading, isSuccess, claimRewardForLevels };
 }

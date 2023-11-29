@@ -8,6 +8,7 @@ import {
 } from '@impact-market/ui';
 import { DataContext } from '../../context/DataContext';
 import { MetricsWrapper, RewardsButton } from './Styles';
+import { toToken } from '@impact-market/utils/toToken';
 import { useAccount } from 'wagmi';
 import { useState, useContext } from 'react';
 import processTransactionError from '../../utils/processTransactionError';
@@ -36,45 +37,41 @@ const Metrics = (props: any) => {
 
     const claimRewards = async () => {
         setIsLoading(true);
-        let response;
-        const metricsClaimRewards = metrics?.claimRewards;
-        const {
-            amount = 0,
-            levelId = 0,
-            signature: signatures = false
-        } = metricsClaimRewards?.[0] || {};
 
         try {
-            response = (await claimRewardForLevels(
+            const response = (await claimRewardForLevels(
                 address || '0x0',
                 [levelId],
-                [parseInt(amount)],
+                [toToken(amount)],
                 [signatures]
-            )) as any;
+            )) as { hash?: string };
+
+            const { hash } = response;
+
+            await fetch(
+                `${import.meta.env.VITE_API_URL}/learn-and-earn/levels`,
+                {
+                    body: JSON.stringify({
+                        transactionHash: hash
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'PUT'
+                }
+            );
+
+            toast.success(`You've successfully claimed your rewards.`);
+            setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
             processTransactionError(error, 'claim_lae_rewards');
             console.log(error);
             toast.error('An error has occurred');
-            throw Error;
+            throw error;
         }
-
-        const { transactionHash } = response;
-
-        await fetch(`${import.meta.env.VITE_API_URL}/learn-and-earn/levels`, {
-            body: JSON.stringify({
-                transactionHash
-            }),
-            headers: {
-                Accept: 'application/json',
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            method: 'PUT'
-        });
-
-        toast.success(`You've successfully claimed your rewards.`);
-        setIsLoading(false);
     };
 
     return (

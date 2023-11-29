@@ -2429,10 +2429,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@impact-market/ui@link ../ui":
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/@impact-market/ui/-/ui-1.6.3.tgz#4dcb322c3e81c229c230267e647a94ef1129c9bc"
-  integrity sha512-w0NH45x7nDffFBYKDSDOF2mY2yGr99ISDVTq/AH63EPX6qHuAf8b5WauRZYrpq9bQjEv4ecPBUTGjCk9OYD+xw==
+"@impact-market/ui@1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@impact-market/ui/-/ui-1.6.2.tgz#5b637ddecf9480b16c9c2e1aa48351fbe2fef846"
+  integrity sha512-L08t8fTt4x+4H32g0LOWcPDmxqz7TaZFZyO7m3r4lHJK5/VHGIdrFp/VAoO/FsbKR4mPQqCokxywae4sMC+WeA==
   dependencies:
     "@storybook/manager-webpack5" "6.5.16"
     polished "4.2.2"
@@ -2984,7 +2984,7 @@
     "@sentry/utils" "7.81.1"
     https-proxy-agent "^5.0.0"
 
-"@sentry/react@^7.81.1":
+"@sentry/react@7.81.1":
   version "7.81.1"
   resolved "https://registry.yarnpkg.com/@sentry/react/-/react-7.81.1.tgz#6a94e8e373a5bf27330cea2eb1a603ae0eb0b8ba"
   integrity sha512-kk0plP/mf8KgVLOiImIpp1liYysmh3Un8uXcVAToomSuHZPGanelFAdP0XhY+0HlWU9KIfxTjhMte1iSwQ8pYw==
@@ -3016,7 +3016,7 @@
   dependencies:
     "@sentry/types" "7.81.1"
 
-"@sentry/vite-plugin@^2.10.1":
+"@sentry/vite-plugin@2.10.1":
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/@sentry/vite-plugin/-/vite-plugin-2.10.1.tgz#b1dec4f71eb3d81ee9f8446d9ea9d801245a74fd"
   integrity sha512-xVQEv27xE/kt/5LYWIJ+dFLeKytNCGBriUMRyoVGYhWAAS6T2Rs0iA4ri6FqMznz/Yhm6k3HzCivzKF8Z4ac5Q==
@@ -3701,7 +3701,7 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.2.tgz#ff02bc3dc8317cd668dfec247b750ba1f1d62453"
   integrity sha512-VeiPZ9MMwXjO32/Xu7+OwflfmeoRwkE/qzndw42gGtgJwZopBnzy2gD//NN1+go1mADzkDcqf/KnFRSjTJ8xJA==
 
-"@types/history@^5.0.0":
+"@types/history@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-5.0.0.tgz#29f919f0c8e302763798118f45b19cab4a886f14"
   integrity sha512-hy8b7Y1J8OGe6LbAjj3xniQrj3v6lsivCcrmf4TzSgPzLkhIeKgc5IZnT7ReIqmEuodjfO8EYAuoFvIrHi/+jQ==
@@ -7411,7 +7411,7 @@ hey-listen@^1.0.8:
   resolved "https://registry.yarnpkg.com/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
   integrity sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
 
-history@*, history@^5.3.0:
+history@*, history@5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/history/-/history-5.3.0.tgz#1548abaa245ba47992f063a0783db91ef201c73b"
   integrity sha512-ZqaKwjjrAYUYfLG+htGaIIZ4nioX2L70ZUMIFysS3xvBsSG4x/n1V6TXV3N8ZYNuFGlDirFg32T7B6WOUPDYcQ==

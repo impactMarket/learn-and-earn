@@ -278,7 +278,7 @@ const Lesson = () => {
                         }}
                     >
                         <RichText
-                            content={currentQuestion.primary.question[0].text}
+                            content={currentQuestion?.primary?.question[0]?.text}
                             pb="1rem"
                         />
 

@@ -31,7 +31,7 @@ import { useEffect, useState } from 'react';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getAnalytics, logEvent } from 'firebase/analytics';
-
+import './helpers/polyfills';
 import * as Sentry from '@sentry/react';
 
 // TODO: Add SDKs for Firebase products that you want to use
