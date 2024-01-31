@@ -3,13 +3,14 @@ import {
     Card,
     Display,
     ProgressCard,
+    Text,
     colors,
     toast
 } from '@impact-market/ui';
 import { DataContext } from '../../context/DataContext';
 import { MetricsWrapper, RewardsButton } from './Styles';
 import { toToken } from '@impact-market/utils/toToken';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 import { useState, useContext } from 'react';
 import processTransactionError from '../../utils/processTransactionError';
 import RichText from '../../libs/Prismic/components/RichText';
@@ -74,6 +75,11 @@ const Metrics = (props: any) => {
         }
     };
 
+    const balance = useBalance({
+        address,
+        token: import.meta.env.VITE_PACT_ADDRESS
+    })?.data;
+
     return (
         <MetricsWrapper>
             {totalData.map((item) => (
@@ -98,38 +104,41 @@ const Metrics = (props: any) => {
                     </Display>
                 </ProgressCard>
             ))}
-            {hasRewards && (
-                <Card
-                    className="claim-rewards"
-                    style={{ boxSizing: 'border-box', flex: '1' }}
+
+            <Card
+                className="claim-rewards"
+                style={{ boxSizing: 'border-box', flex: '1' }}
+            >
+                <Box
+                    style={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}
                 >
-                    <Box
-                        style={{
-                            alignItems: 'center',
-                            display: 'flex',
-                            flexDirection: 'column'
-                        }}
+                    <RichText
+                        style={{ color: `${colors.g500}` }}
+                        content={
+                            hasRewards ? props.copy.success : props.copy.failed
+                        }
+                    />
+                    <RewardsButton
+                        onClick={claimRewards}
+                        {...disabled}
+                        disabled={!hasRewards}
+                        isLoading={isLoading}
                     >
-                        <RichText
-                            style={{ color: `${colors.g500}` }}
-                            content={
-                                hasRewards
-                                    ? props.copy.success
-                                    : props.copy.failed
-                            }
-                        />
-                        <RewardsButton
-                            onClick={claimRewards}
-                            {...disabled}
-                            disabled={!hasRewards}
-                            isLoading={isLoading}
-                        >
-                            {/* <String id="claimRewards" /> */}
-                            {'Claim Rewards'}
-                        </RewardsButton>
-                    </Box>
-                </Card>
-            )}
+                        {/* <String id="claimRewards" /> */}
+                        {'Claim Rewards'}
+                    </RewardsButton>
+                    <Text
+                        small
+                        style={{ marginTop: '.5rem' }}
+                    >{`You have ${parseFloat(balance?.formatted || '0').toFixed(
+                        0
+                    )} PACT.`}</Text>
+                </Box>
+            </Card>
         </MetricsWrapper>
     );
 };
