@@ -131,7 +131,7 @@ const Level = () => {
                 <Box style={{ maxWidth: '36.25rem' }}>
                     <Text>
                         {
-                            'After each tutorial you will be prompt to answer a simple quiz based on what you have learned.For every successful quiz, you will receive $PACT tokens in your wallet.'
+                            'After each tutorial, you will be prompted to answer a quiz based on your learning. You will receive tokens for every successful quiz in your wallet.'
                         }
                     </Text>
 
