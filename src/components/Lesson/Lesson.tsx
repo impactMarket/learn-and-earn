@@ -26,13 +26,6 @@ import queryString from 'query-string';
 import RichText from '../../libs/Prismic/components/RichText';
 import processTransactionError from '../../utils/processTransactionError';
 
-const initialAnswers = [
-    [false, false, false],
-    [false, false, false],
-    [false, false, false]
-];
-
-const QUIZ_LENGTH = 3;
 
 const Lesson = () => {
     const [modal] = useSinglePrismicDocument('pwa-modals');
@@ -87,6 +80,9 @@ const Lesson = () => {
         'complete-content': '',
         sponsored: ''
     };
+
+    const QUIZ_LENGTH = questions.length || 3;
+    const initialAnswers = Array(QUIZ_LENGTH).fill([false, false, false])
 
     const [currentPage, setCurrentPage] = useState(parseInt(page));
 
@@ -157,7 +153,7 @@ const Lesson = () => {
     const postAnswers = async () => {
         // Post answers
         setIsSubmitting(true);
-        const answers = userAnswers
+        const answers = userAnswers.slice(0, QUIZ_LENGTH)
             .reduce((next: any, current: any) => {
                 return [current.findIndex((el: any) => el), ...next];
             }, [])
