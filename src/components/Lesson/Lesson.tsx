@@ -47,8 +47,7 @@ const Lesson = () => {
     };
 
     const location = useLocation();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useSearchParams();
     const queryParams = queryString.parse(location.search);
     const { page } = queryParams;
     const navigate = useNavigate();
@@ -274,35 +273,41 @@ const Lesson = () => {
                         }}
                     >
                         <RichText
-                            content={currentQuestion?.primary?.question[0]?.text}
+                            content={
+                                currentQuestion?.primary?.question[0]?.text
+                            }
                             pb="1rem"
                         />
 
-                        {currentQuestion.items.map((item: any, idx: number) => {
-                            const question = item.answer[0];
-                            const temp = [...userAnswers];
+                        {currentQuestion?.items?.map(
+                            (item: any, idx: number) => {
+                                const question = item.answer[0];
+                                const temp = [...userAnswers];
 
-                            return (
-                                <Box
-                                    onClick={() => {
-                                        temp[currentPage] = [
-                                            false,
-                                            false,
-                                            false
-                                        ];
-                                        temp[currentPage][idx] =
-                                            !temp[currentPage][idx];
-                                        setUserAnswers(temp);
-                                    }}
-                                    style={{ marginBottom: '.75rem' }}
-                                >
-                                    <OptionItem
-                                        content={question.text}
-                                        isActive={userAnswers[currentPage][idx]}
-                                    />
-                                </Box>
-                            );
-                        })}
+                                return (
+                                    <Box
+                                        onClick={() => {
+                                            temp[currentPage] = [
+                                                false,
+                                                false,
+                                                false
+                                            ];
+                                            temp[currentPage][idx] =
+                                                !temp[currentPage][idx];
+                                            setUserAnswers(temp);
+                                        }}
+                                        style={{ marginBottom: '.75rem' }}
+                                    >
+                                        <OptionItem
+                                            content={question.text}
+                                            isActive={
+                                                userAnswers[currentPage][idx]
+                                            }
+                                        />
+                                    </Box>
+                                );
+                            }
+                        )}
                     </Box>
                 )}
 
