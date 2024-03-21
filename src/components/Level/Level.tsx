@@ -19,6 +19,13 @@ const Cell = styled(Box)`
     justify-content: center;
 `;
 
+const AlertStyled = styled(Alert)`
+    & > div > div {
+        display: flex;
+        gap: 1rem;
+    }
+`;
+
 const Level = () => {
     const { view, categories, token, setIsLoading }: any =
         useContext(DataContext);
@@ -28,7 +35,7 @@ const Level = () => {
     const lessonIds = !!level && extractLessonIds(level);
     const lessons = Prismic.getLessonsByIDs({ lessonIds });
     const navigate = useNavigate();
-    const { title, category, sponsor } = level?.data || {};
+    const { title, category, sponsor, minimum } = level?.data || {};
 
     const {
         'threshold-tooltip': thresholdTooltip,
@@ -146,6 +153,14 @@ const Level = () => {
                             'After 3 attempts to answer a quiz and the result is still wrong, you will not be able to earn rewards but will still be able to learn.'
                         }
                     </Text>
+
+                    {minimum && (
+                        <AlertStyled
+                            warning
+                            icon="alertTriangle"
+                            title={minimum}
+                        />
+                    )}
 
                     {!!certificateDetails?.completionDate && (
                         <GenerateCertificate {...certificateDetails} />
