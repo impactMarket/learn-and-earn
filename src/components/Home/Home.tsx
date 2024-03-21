@@ -17,7 +17,7 @@ function Home() {
         useContext(DataContext);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useSearchParams();
     // const { claimRewardForLevels } = useLearnAndEarn();
     // const { address } = useAccount();
 
@@ -195,7 +195,7 @@ function Home() {
                     </Heading>
                 </Box>
             </Box>
-            {<Progress />}
+            <Progress />
             <Tabs defaultIndex={0}>
                 <CategoryTabs style={{ marginTop: '1rem' }}>
                     {TabItems.map((el: string, idx: number) => (

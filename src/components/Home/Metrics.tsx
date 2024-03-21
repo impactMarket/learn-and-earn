@@ -66,11 +66,19 @@ const Metrics = (props: any) => {
 
             toast.success(`You've successfully claimed your rewards.`);
             setIsLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setIsLoading(false);
             processTransactionError(error, 'claim_lae_rewards');
             console.log(error);
-            toast.error('An error has occurred');
+
+            if (error.toString().includes('insufficient')) {
+                toast.error(
+                    'Insufficient funds in your wallet to claim rewards.'
+                );
+            } else {
+                toast.error('An error has occurred');
+            }
+
             throw error;
         }
     };

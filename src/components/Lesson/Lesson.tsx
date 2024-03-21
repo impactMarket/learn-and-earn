@@ -26,7 +26,6 @@ import queryString from 'query-string';
 import RichText from '../../libs/Prismic/components/RichText';
 import processTransactionError from '../../utils/processTransactionError';
 
-
 const Lesson = () => {
     const [modal] = useSinglePrismicDocument('pwa-modals');
     const [wrongModalOpen, setWrongModalOpen] = useState(false);
@@ -82,7 +81,7 @@ const Lesson = () => {
     };
 
     const QUIZ_LENGTH = questions.length || 3;
-    const initialAnswers = Array(QUIZ_LENGTH).fill([false, false, false])
+    const initialAnswers = Array(QUIZ_LENGTH).fill([false, false, false]);
 
     const [currentPage, setCurrentPage] = useState(parseInt(page));
 
@@ -153,7 +152,8 @@ const Lesson = () => {
     const postAnswers = async () => {
         // Post answers
         setIsSubmitting(true);
-        const answers = userAnswers.slice(0, QUIZ_LENGTH)
+        const answers = userAnswers
+            .slice(0, QUIZ_LENGTH)
             .reduce((next: any, current: any) => {
                 return [current.findIndex((el: any) => el), ...next];
             }, [])
@@ -274,7 +274,9 @@ const Lesson = () => {
                         }}
                     >
                         <RichText
-                            content={currentQuestion?.primary?.question[0]?.text}
+                            content={
+                                currentQuestion?.primary?.question[0]?.text
+                            }
                             pb="1rem"
                         />
 
