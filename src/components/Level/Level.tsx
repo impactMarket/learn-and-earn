@@ -5,12 +5,12 @@ import { DataContext } from '../../context/DataContext';
 import { extractLessonIds } from '../../helpers/Helpers';
 import { useContext, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import GenerateCertificate from '../Common/GenerateCertificate';
+import GenerateCertificate from '../../../learn-and-earn-submodule/components/GenerateCertificate';
 import Prismic from '../../helpers/Prismic';
 import RichText from '../../libs/Prismic/components/RichText';
 import styled from 'styled-components';
 import Tooltip from '../Tooltip';
-import useLessons from '../../hooks/useLessons';
+import useLessons from '../../../learn-and-earn-submodule/hooks/useLessons';
 
 const Cell = styled(Box)`
     display: flex;
@@ -60,7 +60,13 @@ const Level = () => {
         totalPoints,
         completedToday,
         rewardAvailable = true
-    } = useLessons(lessons, level?.id, token);
+    } = useLessons(
+        lessons,
+        level?.id,
+        'en',
+        import.meta.env.VITE_API_URL,
+        token
+    );
 
     const certificateDetails = !!lessonsData && {
         ...cardData,

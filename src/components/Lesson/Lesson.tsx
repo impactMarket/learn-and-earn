@@ -11,7 +11,7 @@ import {
     colors,
     toast
 } from '@impact-market/ui';
-import { Breakpoints } from '../Breakpoints';
+import { Breakpoints } from '../../../learn-and-earn-submodule/helpers/Breakpoints';
 import { Button, BackButton } from '../../Theme';
 import { DataContext } from '../../context/DataContext';
 import { useContext } from 'react';
@@ -19,7 +19,7 @@ import { useLocation } from 'react-router-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSinglePrismicDocument } from '@prismicio/react';
 import { useState, useEffect } from 'react';
-import EnhancedPagination from '../Common/EnhancedPagination';
+import EnhancedPagination from '../../../learn-and-earn-submodule/components/EnhancedPagination';
 import Modal from '../../modals/Modal';
 import Prismic from '../../helpers/Prismic';
 import queryString from 'query-string';
@@ -89,6 +89,7 @@ const Lesson = () => {
     const [userAnswers, setUserAnswers] = useState(initialAnswers);
 
     const canGotoQuiz = progress.length === content.length;
+    const pageCount = isQuiz ? QUIZ_LENGTH : content.length;
 
     const slide = prismicLesson
         ? content[currentPage]?.primary?.content ??
@@ -426,7 +427,13 @@ const Lesson = () => {
                         <EnhancedPagination
                             currentPage={currentPage}
                             handlePageClick={handlePageClick}
-                            pageCount={isQuiz ? QUIZ_LENGTH : content.length}
+                            nextLabel={'Next'}
+                            pageCount={pageCount}
+                            previousLabel={'Previous'}
+                            submitLabel={'Submit'}
+                            infoLabel={`Slide ${
+                                currentPage + 1
+                            } of ${pageCount}`}
                             goToQuiz={toggleQuiz}
                             isQuiz={isQuiz}
                             canGotoQuiz={canGotoQuiz}
