@@ -25,7 +25,6 @@ export const ctaText = (
             return (
                 <RichText
                     content={earnRewardsCopy}
-                    medium
                     variables={{
                         asset: tokenAddressToName(rewardAsset),
                         reward

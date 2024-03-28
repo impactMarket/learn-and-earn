@@ -19,6 +19,13 @@ const Cell = styled(Box)`
     justify-content: center;
 `;
 
+const AlertStyled = styled(Alert)`
+    & > div > div {
+        display: flex;
+        gap: 1rem;
+    }
+`;
+
 const Level = () => {
     const { view, categories, token, setIsLoading }: any =
         useContext(DataContext);
@@ -28,7 +35,7 @@ const Level = () => {
     const lessonIds = !!level && extractLessonIds(level);
     const lessons = Prismic.getLessonsByIDs({ lessonIds });
     const navigate = useNavigate();
-    const { title, category, sponsor } = level?.data || {};
+    const { title, category, sponsor, minimum } = level?.data || {};
 
     const {
         'threshold-tooltip': thresholdTooltip,
@@ -129,7 +136,6 @@ const Level = () => {
                 <RichText
                     className="sub-item"
                     content={categories[category?.id]?.title}
-                    g500
                 />
             )}
             <Divider />
@@ -138,7 +144,7 @@ const Level = () => {
                 <Box style={{ maxWidth: '36.25rem' }}>
                     <Text>
                         {
-                            'After each tutorial you will be prompt to answer a simple quiz based on what you have learned.For every successful quiz, you will receive $PACT tokens in your wallet.'
+                            'After each tutorial, you will be prompted to answer a quiz based on your learning. You will receive tokens for every successful quiz in your wallet.'
                         }
                     </Text>
 
@@ -154,18 +160,24 @@ const Level = () => {
                         }
                     </Text>
 
+                    {minimum && (
+                        <AlertStyled
+                            warning
+                            icon="alertTriangle"
+                            title={minimum}
+                        />
+                    )}
+
                     {!!certificateDetails?.completionDate && (
                         <GenerateCertificate {...certificateDetails} />
                     )}
 
                     <Box margin="1rem 0">
-                        <Text g500 noMargin>
+                        <Text noMargin>
                             <RichText content={totalPointsLabel} small />
                         </Text>
 
-                        <Display main medium>
-                            {totalPoints}
-                        </Display>
+                        <Display main>{totalPoints}</Display>
                     </Box>
 
                     <Divider mt="2rem" />
@@ -183,13 +195,11 @@ const Level = () => {
                                     <Box style={{ flexGrow: '1' }}>
                                         <RichText
                                             content={item.title.split(' -')[0]}
-                                            g500
                                             bold
                                         />
 
                                         <RichText
                                             content={item.title.split('- ')[1]}
-                                            g500
                                         />
                                     </Box>
                                     <Cell>

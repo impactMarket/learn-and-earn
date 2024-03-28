@@ -15,8 +15,9 @@ const ITEMS_PER_PAGE = 6;
 function Home() {
     const { view, categories, token, setIsLoading }: any =
         useContext(DataContext);
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useSearchParams();
     // const { claimRewardForLevels } = useLearnAndEarn();
     // const { address } = useAccount();
 
@@ -190,8 +191,8 @@ function Home() {
 
     return (
         <>
-            <Box flex style={{ justifyContent: 'space-between' }}>
-                <Box flex fDirection={'column'}>
+            <Box style={{ justifyContent: 'space-between' }}>
+                <Box>
                     <Heading>
                         {
                             'Earn rewards directly in MiniPay by learning about selected web3 projects'
@@ -199,7 +200,7 @@ function Home() {
                     </Heading>
                 </Box>
             </Box>
-            {<Progress />}
+            <Progress />
             <Tabs defaultIndex={0}>
                 <CategoryTabs style={{ marginTop: '1rem' }}>
                     {TabItems.map((el: string, idx: number) => (

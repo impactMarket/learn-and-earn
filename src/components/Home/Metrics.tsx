@@ -1,10 +1,20 @@
-import { Box, Card, Display, ProgressCard, colors, toast } from '@impact-market/ui';
-import { useState, useContext } from 'react';
-import RichText from '../../libs/Prismic/components/RichText';
-import { MetricsWrapper, RewardsButton } from './Styles';
+import {
+    Box,
+    Card,
+    Display,
+    ProgressCard,
+    Text,
+    colors,
+    toast
+} from '@impact-market/ui';
 import { DataContext } from '../../context/DataContext';
+import { MetricsWrapper, RewardsButton } from './Styles';
+import { toToken } from '@impact-market/utils/toToken';
+import { useAccount, useBalance } from 'wagmi';
+import { useState, useContext } from 'react';
+import processTransactionError from '../../utils/processTransactionError';
+import RichText from '../../libs/Prismic/components/RichText';
 import useLearnAndEarn from '../../hooks/useLearnAndEarn';
-import { useAccount } from 'wagmi';
 
 const Metrics = (props: any) => {
     const { metrics } = props;
@@ -28,51 +38,61 @@ const Metrics = (props: any) => {
 
     const claimRewards = async () => {
         setIsLoading(true);
-        let response;
-        const metricsClaimRewards = metrics?.claimRewards;
-        const {
-            amount = 0,
-            levelId = 0,
-            signature: signatures = false
-        } = metricsClaimRewards?.[0] || {};
 
         try {
-            response = await claimRewardForLevels(
+            const response = (await claimRewardForLevels(
                 address || '0x0',
                 [levelId],
-                [parseInt(amount)],
+                [toToken(amount)],
                 [signatures]
+            )) as { hash?: string };
+
+            const { hash } = response;
+
+            await fetch(
+                `${import.meta.env.VITE_API_URL}/learn-and-earn/levels`,
+                {
+                    body: JSON.stringify({
+                        transactionHash: hash
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'PUT'
+                }
             );
-        } catch (error) {
+
+            toast.success(`You've successfully claimed your rewards.`);
             setIsLoading(false);
-            // processTransactionError(error, 'claim_lae_rewards');
+        } catch (error: any) {
+            setIsLoading(false);
+            processTransactionError(error, 'claim_lae_rewards');
             console.log(error);
-            toast.error('An error has occurred');
-            throw Error;
+
+            if (error.toString().includes('insufficient')) {
+                toast.error(
+                    'Insufficient funds in your wallet to claim rewards.'
+                );
+            } else {
+                toast.error('An error has occurred.');
+            }
+
+            throw error;
         }
-
-        const { transactionHash } = response;
-
-        await fetch(`${import.meta.env.VITE_API_URL}/learn-and-earn/levels`, {
-            body: JSON.stringify({
-                transactionHash
-            }),
-            headers: {
-                Accept: 'application/json',
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            method: 'PUT'
-        });
-
-        toast.success(`You've successfully claimed your rewards.`);
-        setIsLoading(false);
     };
+
+    const balance = useBalance({
+        address,
+        token: import.meta.env.VITE_PACT_ADDRESS
+    })?.data;
 
     return (
         <MetricsWrapper>
             {totalData.map((item) => (
                 <ProgressCard
+                    key={item.label}
                     label={item.label}
                     progress={(item?.completed / item?.total) * 100}
                     pathColor="p600"
@@ -92,38 +112,41 @@ const Metrics = (props: any) => {
                     </Display>
                 </ProgressCard>
             ))}
-            {hasRewards && (
-                <Card
-                    className="claim-rewards"
-                    style={{ boxSizing: 'border-box', flex: '1' }}
+
+            <Card
+                className="claim-rewards"
+                style={{ boxSizing: 'border-box', flex: '1' }}
+            >
+                <Box
+                    style={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}
                 >
-                    <Box
-                        style={{
-                            alignItems: 'center',
-                            display: 'flex',
-                            flexDirection: 'column'
-                        }}
+                    <RichText
+                        style={{ color: `${colors.g500}` }}
+                        content={
+                            hasRewards ? props.copy.success : props.copy.failed
+                        }
+                    />
+                    <RewardsButton
+                        onClick={claimRewards}
+                        {...disabled}
+                        disabled={!hasRewards}
+                        isLoading={isLoading}
                     >
-                        <RichText
-                            style={{color: `${colors.g500}`}}
-                            content={
-                                hasRewards
-                                    ? props.copy.success
-                                    : props.copy.failed
-                            }
-                        />
-                        <RewardsButton
-                            onClick={claimRewards}
-                            {...disabled}
-                            disabled={!hasRewards}
-                            isLoading={isLoading}
-                        >
-                            {/* <String id="claimRewards" /> */}
-                            {'Claim Rewards'}
-                        </RewardsButton>
-                    </Box>
-                </Card>
-            )}
+                        {/* <String id="claimRewards" /> */}
+                        {'Claim Rewards'}
+                    </RewardsButton>
+                    <Text
+                        small
+                        style={{ marginTop: '.5rem' }}
+                    >{`You have ${parseFloat(balance?.formatted || '0').toFixed(
+                        0
+                    )} PACT.`}</Text>
+                </Box>
+            </Card>
         </MetricsWrapper>
     );
 };
