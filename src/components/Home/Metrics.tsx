@@ -18,7 +18,7 @@ import useLearnAndEarn from '../../hooks/useLearnAndEarn';
 
 const Metrics = (props: any) => {
     const { metrics } = props;
-    const { token }: any = useContext(DataContext);
+    const { token, view }: any = useContext(DataContext);
     const {
         amount = false,
         levelId = false,
@@ -145,6 +145,17 @@ const Metrics = (props: any) => {
                     >{`You have ${parseFloat(balance?.formatted || '0').toFixed(
                         0
                     )} PACT.`}</Text>
+                    <Text small semibold style={{ marginTop: '.5rem' }}>
+                        <a
+                            href={`mailto:external-issues-aaaamvozkp6sgugn64lldg5n64@ipctmarket.slack.com?subject=Learn%20and%20Earn%20-%20Opera&body=Please%20Describe%20Your%20Problem:%0A%0A%0A------------------------------%0A%0AYour%20Wallet%20Address:%0A${address}%0A%0AWe%20collected%20your%20wallet%20address%20to%20analyze%20and%20resolve%20reported%20bugs.%20Without%20this%20information%20it%20may%20be%20difficult%20to%20provide%20proper%20help.%20Your%20funds%20remain%20secure.`}
+                            style={{
+                                color: '#5A6FEF',
+                                textDecoration: 'none'
+                            }}
+                        >
+                            {view?.data['need-help']}
+                        </a>
+                    </Text>
                 </Box>
             </Card>
         </MetricsWrapper>
