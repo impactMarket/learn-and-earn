@@ -6,7 +6,7 @@ import {
     DropdownMenu,
     TabList
 } from '@impact-market/ui';
-import { Breakpoints } from '../../../learn-and-earn-submodule/helpers/Breakpoints';
+import { Breakpoints } from '../Breakpoints';
 import { Button } from '../../Theme';
 import { colors } from '@impact-market/ui';
 
