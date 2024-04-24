@@ -13,6 +13,7 @@ import { Toaster } from '@impact-market/ui';
 
 import Home from './components/Home/Home';
 import Level from './components/Level/Level';
+import Pact from './components/Pact';
 
 import { DataProvider } from './context/DataContext';
 import Lesson from './components/Lesson/Lesson';
@@ -170,6 +171,7 @@ function Wrapper() {
                 <Toaster />
                 <SentryRoutes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/pact" element={<Pact />} />
                     <Route path="/:levelId/:uid" element={<Lesson />} />
                     <Route path="/:levelId" element={<Level />} />
                 </SentryRoutes>

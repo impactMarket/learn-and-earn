@@ -75,7 +75,11 @@ export const DataProvider = ({
             {currentRoute === '/' && <Header />}
             <ViewContainer
                 {...({} as any)}
-                className={currentRoute !== '/' && 'white-container'}
+                className={
+                    currentRoute !== '/' &&
+                    currentRoute !== '/pact' &&
+                    'white-container'
+                }
                 style={{
                     minHeight: 'calc(100vh - 4.375rem)',
                     padding: '0',

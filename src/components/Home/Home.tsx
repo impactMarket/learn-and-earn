@@ -1,20 +1,39 @@
-import { Box, Pagination, Tab, Tabs } from '@impact-market/ui';
+import { Box, Card, Pagination, Tab, Tabs, Text } from '@impact-market/ui';
 import { DataContext } from '../../context/DataContext';
 import { CategoryTabs, Heading } from './Styles';
 import { useAllPrismicDocumentsByType } from '@prismicio/react';
 import { useContext, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import LevelsTable from './LevelsTable';
 import Metrics from './Metrics';
 import queryString from 'query-string';
 import useLevels from '../../hooks/useLevels';
 import useSWR from 'swr';
+import styled from 'styled-components';
+import { colors } from '@impact-market/ui';
+import { useAccount, useBalance } from 'wagmi';
 
 const ITEMS_PER_PAGE = 6;
+
+const BalanceCard = styled(Card)`
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+`;
 
 function Home() {
     const { view, categories, token, setIsLoading }: any =
         useContext(DataContext);
+    const { address } = useAccount();
+    const navigate = useNavigate();
+
+    const balance = useBalance({
+        address,
+        token: import.meta.env.VITE_PACT_ADDRESS
+    })?.data;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [, setSearchParams] = useSearchParams();
@@ -24,7 +43,8 @@ function Home() {
     const {
         'earn-rewards': earnRewards,
         'claim-available': claimAvailable = '',
-        'claim-disabled': claimDisabled = ''
+        'claim-disabled': claimDisabled = '',
+        'claim-completed': claimCompleted = ''
     } = view?.data ?? {
         'earn-rewards': 'Earn Rewards',
         'heading-content': '',
@@ -130,7 +150,11 @@ function Home() {
         return (
             <Metrics
                 metrics={metrics}
-                copy={{ failed: claimDisabled, success: claimAvailable }}
+                copy={{
+                    failed: claimDisabled,
+                    success: claimAvailable,
+                    completed: claimCompleted
+                }}
             />
         );
     };
@@ -195,6 +219,31 @@ function Home() {
                     </Heading>
                 </Box>
             </Box>
+            <BalanceCard>
+                <Box>
+                    <Text extrasmall medimum style={{ color: colors.g500 }}>
+                        Your PACT Balance
+                    </Text>
+                    <Text large semibold>
+                        {`${parseFloat(balance?.formatted || '0').toFixed(
+                            0
+                        )} PACT`}
+                    </Text>
+                </Box>
+                <Box>
+                    <Text
+                        small
+                        semibold
+                        style={{ color: '#5A6FEF', cursor: 'pointer' }}
+                        onClick={() => {
+                            setIsLoading(true);
+                            navigate(`/pact`);
+                        }}
+                    >
+                        How To Use $PACT
+                    </Text>
+                </Box>
+            </BalanceCard>
             <Progress />
             <Tabs defaultIndex={0}>
                 <CategoryTabs style={{ marginTop: '1rem' }}>
