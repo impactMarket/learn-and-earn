@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-    Routes,
-    Route,
     BrowserRouter,
-    useLocation,
-    useNavigationType,
+    Route,
+    Routes,
     createRoutesFromChildren,
-    matchRoutes
+    matchRoutes,
+    useLocation,
+    useNavigationType
 } from 'react-router-dom';
 
 import { Toaster } from '@impact-market/ui';
@@ -15,8 +15,6 @@ import Home from './components/Home/Home';
 import Level from './components/Level/Level';
 import Pact from './components/Pact';
 
-import { DataProvider } from './context/DataContext';
-import Lesson from './components/Lesson/Lesson';
 import {
     WagmiConfig,
     useAccount,
@@ -24,16 +22,18 @@ import {
     // useNetwork,
     // useWalletClient
 } from 'wagmi';
+import Lesson from './components/Lesson/Lesson';
+import { DataProvider } from './context/DataContext';
 // import { ImpactProvider } from "@impact-market/utils/ImpactProvider";
-import { chains, wagmiConfig } from './helpers/network';
-import { InjectedConnector } from 'wagmi/connectors/injected';
 import { useEffect, useState } from 'react';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { chains, wagmiConfig } from './helpers/network';
 
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-import { getAnalytics, logEvent } from 'firebase/analytics';
-import './helpers/polyfills';
 import * as Sentry from '@sentry/react';
+import { getAnalytics, logEvent } from 'firebase/analytics';
+import { initializeApp } from 'firebase/app';
+import './helpers/polyfills';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -130,6 +130,10 @@ const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
 function Wrapper() {
     const [token, setToken] = useState('');
+    const [email, setEmail] = useState({
+        email: '',
+        validated: ''
+    });
     const { address, isConnected } = useAccount();
     // const { data: signer } = useWalletClient();
     // const { chain } = useNetwork();
@@ -155,7 +159,13 @@ function Wrapper() {
             };
             fetch(VITE_API_URL + '/users', requestOptions)
                 .then((response) => response.json())
-                .then((data) => setToken(data.data.token));
+                .then((data) => {
+                    setToken(data.data.token);
+                    setEmail({
+                        email: data.data.email,
+                        validated: data.data.emailValidated
+                    });
+                });
         }
     }, [address]);
 
@@ -167,7 +177,7 @@ function Wrapper() {
         // 	networkId={chain?.id || 42220}
         // >
         <BrowserRouter>
-            <DataProvider token={token}>
+            <DataProvider token={token} email={email}>
                 <Toaster />
                 <SentryRoutes>
                     <Route path="/" element={<Home />} />
