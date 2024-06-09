@@ -21,9 +21,11 @@ export const DataContext = createContext<DataContextType | undefined>(
 
 export const DataProvider = ({
     token,
+    email,
     children
 }: {
     token: string;
+    email: object;
     children: any;
 }) => {
     const [view] = useSinglePrismicDocument('pwa-view-learn-and-earn');
@@ -47,7 +49,7 @@ export const DataProvider = ({
         }
     }, [isLoading]);
 
-    const contextValue = { categories, view, token, setIsLoading };
+    const contextValue = { categories, view, token, email, setIsLoading };
 
     const LoadingComponent = () => {
         return isLoading ? (
