@@ -14,6 +14,8 @@ const Metrics = (props: any) => {
         { ...metrics?.lesson, label: 'Lessons Completed' }
     ];
 
+    // Remove comments for validate email
+
     return (
         <MetricsWrapper>
             {/* {email?.validated ? ( */}
