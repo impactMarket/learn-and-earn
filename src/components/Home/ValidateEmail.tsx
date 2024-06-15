@@ -101,7 +101,7 @@ const ValidateEmail = () => {
     };
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
+        setEmail(e.target.value.toLowerCase());
         setIsEmailValid(true); // Reset email validation state when user types
     };
 
