@@ -1,28 +1,26 @@
 import { Display, ProgressCard } from '@impact-market/ui';
-// import { DataContext } from '../../context/DataContext';
+import { DataContext } from '../../context/DataContext';
 import { MetricsWrapper } from './Styles';
-// import { useContext } from 'react';
+import { useContext } from 'react';
 import ClaimRewards from './ClaimRewards';
-// import ValidateEmail from './ValidateEmail';
+import ValidateEmail from './ValidateEmail';
 
 const Metrics = (props: any) => {
     const { metrics } = props;
-    // const { email }: any = useContext(DataContext);
+    const { email }: any = useContext(DataContext);
 
     const totalData = [
         { ...metrics?.level, label: 'Levels Completed' },
         { ...metrics?.lesson, label: 'Lessons Completed' }
     ];
 
-    // Remove comments for validate email
-
     return (
         <MetricsWrapper>
-            {/* {email?.validated ? ( */}
-            <ClaimRewards data={props} />
-            {/* ) : (
-                <ValidateEmail data={props} />
-            )} */}
+            {email?.validated ? (
+                <ClaimRewards data={props} />
+            ) : (
+                <ValidateEmail />
+            )}
             {totalData.map((item) => (
                 <ProgressCard
                     key={item.label}
