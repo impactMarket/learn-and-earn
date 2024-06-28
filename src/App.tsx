@@ -169,7 +169,7 @@ export const ErrorModal = () => {
                         }}
                     >
                         We would like to apologize but we’re currently
-                        experiencing issues with Learn & Earn and our team is
+                        experiencing issues with Learn & Earn. Our team is
                         working to fix them as soon as possible.
                     </Text>
                     <Text
