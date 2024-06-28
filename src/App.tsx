@@ -6,10 +6,24 @@ import {
     createRoutesFromChildren,
     matchRoutes,
     useLocation,
+    useNavigate,
     useNavigationType
 } from 'react-router-dom';
 
-import { Toaster } from '@impact-market/ui';
+import {
+    Box,
+    Card,
+    ModalManager,
+    ModalWrapper,
+    TextLink,
+    Text,
+    Toaster,
+    colors,
+    openModal,
+    toast,
+    useModal,
+    CircledIcon
+} from '@impact-market/ui';
 
 import Home from './components/Home/Home';
 import Level from './components/Level/Level';
@@ -128,6 +142,72 @@ Sentry.init({
 
 const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
+export const ErrorModal = () => {
+    const navigate = useNavigate();
+
+    return (
+        <ModalWrapper maxW={20}>
+            <Box
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '2rem'
+                }}
+            >
+                <CircledIcon
+                    icon="alertTriangle"
+                    error
+                    style={{ margin: '0 auto' }}
+                    large
+                />
+
+                <Box style={{ marginTop: '1rem', width: '100%' }}>
+                    <Text
+                        style={{
+                            paddingTop: '0.5rem',
+                            textAlign: 'center'
+                        }}
+                    >
+                        We would like to apologize but we’re currently
+                        experiencing issues with Learn & Earn and our team is
+                        working to fix them as soon as possible.
+                    </Text>
+                    <Text
+                        style={{
+                            paddingTop: '0.5rem',
+                            textAlign: 'center'
+                        }}
+                    >
+                        Thank you for your consideration.
+                    </Text>
+                </Box>
+
+                <TextLink
+                    onClick={() => {
+                        navigate(0);
+                    }}
+                    style={{
+                        marginTop: '1rem',
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Text
+                        extrasmall
+                        style={{ textDecoration: 'underline', color: '#000' }}
+                    >
+                        Refresh page
+                    </Text>
+                </TextLink>
+            </Box>
+        </ModalWrapper>
+    );
+};
+
+const modals = {
+    errorModal: ErrorModal
+};
+
 function Wrapper() {
     const [token, setToken] = useState('');
     const [email, setEmail] = useState({
@@ -146,26 +226,44 @@ function Wrapper() {
         logEvent(analytics, 'page_loaded');
         connect();
     }, []);
+
     useEffect(() => {
         console.log({ address });
         if (address) {
-            const requestOptions = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'client-id': 2
-                } as any,
-                body: JSON.stringify({ address })
-            };
-            fetch(VITE_API_URL + '/users', requestOptions)
-                .then((response) => response.json())
-                .then((data) => {
+            const fetchUserData = async () => {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'client-id': 2
+                    } as any,
+                    body: JSON.stringify({ address })
+                };
+
+                try {
+                    const response = await fetch(
+                        VITE_API_URL + '/users',
+                        requestOptions
+                    );
+                    if (!response.ok) {
+                        // If the response status is not in the range 200-299, throw an error
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`
+                        );
+                    }
+                    const data = await response.json();
                     setToken(data.data.token);
                     setEmail({
                         email: data.data.email,
                         validated: data.data.emailValidated
                     });
-                });
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                    openModal('errorModal');
+                }
+            };
+
+            fetchUserData();
         }
     }, [address]);
 
@@ -179,6 +277,7 @@ function Wrapper() {
         <BrowserRouter>
             <DataProvider token={token} email={email}>
                 <Toaster />
+                <ModalManager modals={modals} />
                 <SentryRoutes>
                     <Route path="/" element={<Home />} />
                     <Route path="/pact" element={<Pact />} />
