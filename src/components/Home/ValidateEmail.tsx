@@ -4,6 +4,7 @@ import {
     CircledIcon,
     Icon,
     Input,
+    Select,
     Text,
     TextLink,
     colors,
@@ -16,6 +17,7 @@ import RichText from '../../libs/Prismic/components/RichText';
 import { RewardsButton } from './Styles';
 import processTransactionError from '../../utils/processTransactionError';
 import { useNavigate } from 'react-router-dom';
+import { countriesOptions } from '../../utils/countries';
 
 const ConsentWrapper = styled(Box)`
     display: flex;
@@ -39,36 +41,111 @@ const IconStyled = styled(Icon)`
     margin: 0 auto;
 `;
 
+const SelectStyled = styled(Select)<{ openSelect: boolean }>`
+    & > div {
+        opacity: ${(props) => (props.openSelect ? 1 : 0)};
+        visibility: ${(props) => (props.openSelect ? 'visible' : 'hidden')};
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.0625rem rgba(16, 24, 40, 0.05),
+            0 0 0 1px #d0d5dd;
+        top: unset;
+        transform: translateY(10px);
+    }
+`;
+
 const ValidateEmail = () => {
     const navigate = useNavigate();
 
-    const { email: user }: any = useContext(DataContext);
+    const { user }: any = useContext(DataContext);
     const [openForm, setOpenForm] = useState(false);
     const { token }: any = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [consent, setConsent] = useState(false);
-    const [email, setEmail] = useState('');
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [success, setSuccess] = useState(false);
+    const [gender, setGender] = useState();
+    const [country, setCountry] = useState();
+    const [openCountryDropdown, setOpenCountryDropdown] = useState(false);
+    const [openGenderDropdown, setOpenGenderDropdown] = useState(false);
+
+    const [userUpdated, setUserUpdated] = useState({
+        email: '',
+        firstName: '',
+        lastName: '',
+        age: null,
+        gender: '',
+        country: ''
+    });
 
     useEffect(() => {
-        if (user?.email) {
-            setEmail(user.email);
+        if (user) {
+            setUserUpdated({
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                age: user.age,
+                gender: user.gender,
+                country: user.country
+            });
         }
     }, [user]);
 
+    console.log('User updated: ', userUpdated);
+
+    const validateEmail = (email: string) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserUpdated((prevState) => ({
+            ...prevState,
+            email: e.target.value.toLowerCase()
+        }));
+
+        setIsEmailValid(true); // Reset email validation state when user types
+    };
+
+    const handleInputChange = (
+        field: string,
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setUserUpdated((prevState) => ({
+            ...prevState,
+            [field]: e.target.value
+        }));
+    };
+
+    const handleSelectChange = (field: string, e: string) => {
+        setUserUpdated((prevState) => ({
+            ...prevState,
+            [field]: e
+        }));
+
+        const setters: any = {
+            gender: setGender,
+            country: setCountry
+        };
+
+        if (setters[field]) {
+            setters[field](e);
+        }
+    };
+
     const verifyEmail = async () => {
-        if (!validateEmail(email)) {
+        if (!validateEmail(userUpdated.email)) {
             setIsEmailValid(false);
             return;
         }
+
+        console.log('push', userUpdated);
 
         try {
             const res = await fetch(
                 `${import.meta.env.VITE_API_URL}/users/request-verify`,
                 {
                     body: JSON.stringify({
-                        email: email,
+                        email: userUpdated.email,
                         url: import.meta.env.VITE_VERIFY_EMAIL_URL
                     }),
                     headers: {
@@ -95,14 +172,20 @@ const ValidateEmail = () => {
         }
     };
 
-    const validateEmail = (email: string) => {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
+    const showSelectedCountry = () => {
+        if (country) {
+            return <Text>{country}</Text>;
+        }
+
+        return <Text g500>Select your country</Text>;
     };
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value.toLowerCase());
-        setIsEmailValid(true); // Reset email validation state when user types
+    const showSelectedGender = () => {
+        if (gender) {
+            return <Text>{gender}</Text>;
+        }
+
+        return <Text g500>Select your gender</Text>;
     };
 
     return (
@@ -133,7 +216,7 @@ const ValidateEmail = () => {
                     }}
                     content={
                         !success
-                            ? 'Confirm email to claim rewards'
+                            ? 'Complete your information'
                             : 'Check your inbox! '
                     }
                     semibold
@@ -143,11 +226,19 @@ const ValidateEmail = () => {
                 {openForm ? (
                     <>
                         <Box style={{ marginTop: '1rem', width: '100%' }}>
+                            <Text
+                                g700
+                                medium
+                                small
+                                style={{ marginBottom: '0.375rem' }}
+                            >
+                                Email*
+                            </Text>
                             <Input
                                 id="email"
                                 placeholder="Add email"
                                 onChange={handleEmailChange}
-                                value={email}
+                                value={userUpdated.email}
                                 style={{
                                     color: '#101828',
                                     paddingLeft: '0.5rem'
@@ -166,6 +257,124 @@ const ValidateEmail = () => {
                                 </Text>
                             )}
                         </Box>
+                        <Box style={{ marginTop: '1.5rem', width: '100%' }}>
+                            <Text
+                                g700
+                                medium
+                                small
+                                style={{ marginBottom: '0.375rem' }}
+                            >
+                                First Name*
+                            </Text>
+                            <Input
+                                id="first-name"
+                                placeholder="First name"
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) => handleInputChange('firstName', e)}
+                                value={userUpdated.firstName}
+                                style={{
+                                    color: '#101828',
+                                    paddingLeft: '0.5rem'
+                                }}
+                                icon="user"
+                            />
+                        </Box>
+                        <Box style={{ marginTop: '1.5rem', width: '100%' }}>
+                            <Text
+                                g700
+                                medium
+                                small
+                                style={{ marginBottom: '0.375rem' }}
+                            >
+                                Last Name
+                            </Text>
+                            <Input
+                                id="last-name"
+                                placeholder="Last name"
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) => handleInputChange('lastName', e)}
+                                value={userUpdated.lastName}
+                                style={{
+                                    color: '#101828',
+                                    paddingLeft: '0.5rem'
+                                }}
+                                icon="user"
+                            />
+                        </Box>
+                        <Box style={{ marginTop: '1.5rem', width: '100%' }}>
+                            <Text
+                                g700
+                                medium
+                                small
+                                style={{ marginBottom: '0.375rem' }}
+                            >
+                                Age*
+                            </Text>
+                            <Input
+                                id="age"
+                                placeholder="Age"
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) => handleInputChange('age', e)}
+                                value={userUpdated.age}
+                                style={{
+                                    color: '#101828',
+                                    paddingLeft: '0.5rem'
+                                }}
+                                icon="user"
+                                type="number"
+                                label="Age"
+                            />
+                        </Box>
+                        <Box style={{ marginTop: '1.5rem', width: '100%' }}>
+                            <Text
+                                g700
+                                medium
+                                small
+                                style={{ marginBottom: '0.375rem' }}
+                            >
+                                Country*
+                            </Text>
+                            <SelectStyled
+                                onChange={(country: string) =>
+                                    handleSelectChange('country', country)
+                                }
+                                options={countriesOptions}
+                                renderLabel={showSelectedCountry}
+                                onClick={() =>
+                                    setOpenCountryDropdown(!openCountryDropdown)
+                                }
+                                openSelect={openCountryDropdown}
+                            />
+                        </Box>
+                        <Box style={{ marginTop: '1.5rem', width: '100%' }}>
+                            <Text
+                                g700
+                                medium
+                                small
+                                style={{ marginBottom: '0.375rem' }}
+                            >
+                                Gender*
+                            </Text>
+                            <SelectStyled
+                                onChange={(gender: string) =>
+                                    handleSelectChange('gender', gender)
+                                }
+                                options={[
+                                    { label: 'Male', value: 'm' },
+                                    { label: 'Female', value: 'f' },
+                                    { label: 'Other', value: 'o' }
+                                ]}
+                                renderLabel={showSelectedGender}
+                                onClick={() =>
+                                    setOpenGenderDropdown(!openGenderDropdown)
+                                }
+                                openSelect={openGenderDropdown}
+                            />
+                        </Box>
+
                         <ConsentWrapper>
                             <Box mr={0.6}>
                                 <CheckBox
