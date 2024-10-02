@@ -210,6 +210,8 @@ const modals = {
 
 function Wrapper() {
     const [token, setToken] = useState('');
+    const [user, setUser] = useState({});
+
     const [email, setEmail] = useState({
         email: '',
         validated: ''
@@ -228,7 +230,6 @@ function Wrapper() {
     }, []);
 
     useEffect(() => {
-        console.log({ address });
         if (address) {
             const fetchUserData = async () => {
                 const requestOptions = {
@@ -257,6 +258,15 @@ function Wrapper() {
                         email: data.data.email,
                         validated: data.data.emailValidated
                     });
+                    setUser({
+                        email: data.data.email,
+                        validated: data.data.emailValidated,
+                        firstName: data.data.firstName,
+                        lastName: data.data.lastName,
+                        age: data.data.age,
+                        gender: data.data.gender,
+                        country: data.data.country
+                    });
                 } catch (error) {
                     console.error('Error fetching user data:', error);
                     openModal('errorModal');
@@ -275,7 +285,7 @@ function Wrapper() {
         // 	networkId={chain?.id || 42220}
         // >
         <BrowserRouter>
-            <DataProvider token={token} email={email}>
+            <DataProvider token={token} email={email} user={user}>
                 <Toaster />
                 <ModalManager modals={modals} />
                 <SentryRoutes>

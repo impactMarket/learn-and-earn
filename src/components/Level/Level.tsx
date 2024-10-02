@@ -37,6 +37,8 @@ const Level = () => {
     const navigate = useNavigate();
     const { title, category, sponsor, minimum } = level?.data || {};
 
+    console.log('level: ', level);
+
     const {
         'threshold-tooltip': thresholdTooltip,
         'no-rewards-tooltip': noRewardsTooltip,
